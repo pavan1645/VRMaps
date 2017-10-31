@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PSV</title>
+	<link rel="stylesheet" href="node_modules/photo-sphere-viewer/dist/photo-sphere-viewer.min.css">
+
+	<script src="node_modules/three/build/three.min.js"></script>
+	<script src="node_modules/d.js/lib/D.min.js"></script>
+	<script src="node_modules/uevent/uevent.min.js"></script>
+	<script src="node_modules/dot/doT.min.js"></script>
+	<script src="node_modules/photo-sphere-viewer/dist/photo-sphere-viewer.min.js"></script>
+	<style type="text/css">
+		.bg-red: {
+			background-color: red;
+			color: red;
+		}
+	</style>
+</head>
+<body data-gr-c-s-loaded="true" style="margin: 0px auto; text-align: center;">
+	<h1>PSV</h1>
+	<div id="psv" style="width: 80%; margin: 0px auto">
+		
+	</div>
+	<br>
+	<script>
+		var viewer = PhotoSphereViewer({
+			container: document.getElementById('psv'),
+			panorama: 'pano.jpg',
+			time_anim: false,
+			size: {
+				height: 700
+			},
+			navbar: [
+			'autorotate',
+			'zoom',
+			'markers',
+			'caption',
+			'fullscreen'
+			],
+			markers: [
+			{
+				id: 'polygon',
+				rect: {
+					width: 60,
+					height: 100
+				},
+				anchor: "0% 0%",
+				latitude: 0.03182432605784902,
+				longitude: 6.278938810773422,
+				svgStyle: {
+					fill: 'rgba(250, 0, 0, 0.3)'
+				},
+				tooltip: {
+					content: 'IT department staff room',
+					position: 'bottom center'
+				}
+			},
+			{
+				id: 'next',
+				circle: 20,
+				anchor: "0% 0%",
+				latitude: -0.3029134312477111,
+				longitude: 1.6079743973842118,
+				svgStyle: {
+					fill: 'rgba(250, 0, 0, 0.3)'
+				},
+				tooltip: {
+					content: 'view next image',
+					position: 'top center'
+				}
+			}
+			]
+		});
+		viewer.on('select-marker', function (marker) {
+			if (marker.id == 'next') {
+				viewer.setPanorama('./pano2.jpg', true)
+			} else {
+				viewer.setPanorama('./pano.jpg', true)
+			}
+		})
+		viewer.on('click', function (e) {
+			console.log(e);
+		});
+	</script>
+</body>
+</html>
