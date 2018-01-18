@@ -1,18 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var Q = require('q');
 
 var Pano = require("./models/pano");
 var Marker = require("./models/marker");
 
+//Get single pano
 router.get("/pano/:image_id", function (req, res) {
 	Pano.find({ "id": req.params.image_id }).populate("markers.info").exec((err, pano) => {
 		res.send(pano);
 	})
 });
 
-
-function deletePano (idd) {
+function deletePano(idd) {
 	return Pano.deleteOne({ id: idd }).exec()
 	.then((res) => { console.log("Deleted " + res.deletedCount); })
 	.catch((err) => console.log(err));
@@ -33,7 +32,7 @@ function getAllMarkerId(markers) {
 			.then((_id) => {
 				delete marker.image_id;
 				marker.info = _id;
-				if (index == markers.length -1) {
+				if (index == markers.length - 1) {
 					resolve(markers);
 				}
 			});
@@ -62,9 +61,18 @@ router.post("/pano", function (req, res) {
 	});
 });
 
-router.get("/marker", function (req, res) {
-	Marker.find()
-	res.json({ "code": 202 });
+/*For adding/updating whole pano--- FOR DEV*/
+//Pano.marker.info stores _id not image id.. Update the same!
+router.post("/pano/:id", (req, res) => {
+	Pano.find({ "id": req.params.id }).exec()
+	.then((pano) => {
+		pano[0].id = req.params.id;
+		pano[0].markers = req.body.markers;
+		pano[0].save()
+		.then((x) => {
+			res.send(x);
+		});
+	});
 });
 
 //Create marker
@@ -73,12 +81,33 @@ router.post("/marker", function (req, res) {
 		image_id: req.body.image_id,
 		tooltip_content: req.body.tooltip_content
 	});
-	marker.save( (err, marker) => {
+	marker.save((err, marker) => {
 		if (err) {
 			res.send(err);
 		} else {
 			res.send("Created marker " + marker);
 		}
+	});
+});
+
+//Get single marker
+router.get("/marker/:image_id", function (req, res) {
+	Marker.find({ "image_id": req.params.image_id }).exec((err, marker) => {
+		res.json(marker);
+	});
+});
+
+//updating the whole marker
+router.post("/marker/:id", (req, res) => {
+	Marker.find({ "image_id": req.params.id }).exec()
+	.then((marker) => {
+		console.log(marker);
+		marker[0].image_id = req.params.id;
+		marker[0].tooltip_content = req.body.tooltip_content;
+		marker[0].save()
+		.then((x) => {
+			res.send(x);
+		});
 	});
 });
 
