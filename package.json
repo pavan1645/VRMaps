@@ -1,0 +1,25 @@
+{
+  "name": "vrmaps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://pavan1645@bitbucket.org/pavan1645/vrmaps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/pavan1645/vrmaps#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.9",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.10"
+  }
+}
