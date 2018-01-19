@@ -5,13 +5,18 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class MainService {
-
+	
 	constructor(private http: Http) {
 	}
-
-	init(){
-		return this.http.get("http://localhost:3000/api/")
+	
+	getMarker(id:string){
+		return this.http.get("http://localhost:3000/api/marker/"+id)
 		.map(res => res.json());
 	}
-
+	
+	getPano(id: string) {
+		return this.http.get("http://localhost:3000/api/pano/" + id)
+		.map(res => res.json());
+	}
+	
 }
