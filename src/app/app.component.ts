@@ -26,11 +26,13 @@ export class AppComponent implements OnInit {
 				height: 700
 			},
 			navbar: [
+				'gyroscope',
 				'autorotate',
 				'zoom',
 				'markers',
 				'caption',
 				'fullscreen'
+				
 			],
 			gyroscope: true
 		});
