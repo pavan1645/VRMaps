@@ -75,18 +75,43 @@ router.post("/pano", function (req, res) {
 	});
 }); */
 
+router.post("/pano/:id/marker",(req,res) =>{
+	var marker = new Marker({
+		image_id: req.body.image_id,
+		tooltip_content: req.body.tooltip_content
+	});
+	
+	addMarker(marker,(marker) => {
+		Pano.find({"image_id":req.params.id}).exec()
+		.then((pano) => { 
+			pano.markers.push({
+				info:marker._id,
+				latitude:req.body.latitude,
+				longitude:req.body.longitude
+			});
+			
+			pano.save()
+			.then((pano) => {
+				res.send(pano);
+			});
+		});
+	});
+});
+
 //Create marker
+function addMarker(marker,callback){
+	
+	marker.save()
+	.then((res) => callback(res));
+	
+}
 router.post("/marker", function (req, res) {
 	var marker = new Marker({
 		image_id: req.body.image_id,
 		tooltip_content: req.body.tooltip_content
 	});
-	marker.save((err, marker) => {
-		if (err) {
-			res.send(err);
-		} else {
-			res.send("Created marker " + marker);
-		}
+	addMarker(marker,(marker) => {
+		res.send(marker);
 	});
 });
 
