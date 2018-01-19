@@ -63,7 +63,7 @@ router.post("/pano", function (req, res) {
 
 /*For adding/updating whole pano--- FOR DEV*/
 //Pano.marker.info stores _id not image id.. Update the same!
-router.post("/pano/:id", (req, res) => {
+/* router.post("/pano/:id", (req, res) => {
 	Pano.find({ "id": req.params.id }).exec()
 	.then((pano) => {
 		pano[0].id = req.params.id;
@@ -73,7 +73,7 @@ router.post("/pano/:id", (req, res) => {
 			res.send(x);
 		});
 	});
-});
+}); */
 
 //Create marker
 router.post("/marker", function (req, res) {
