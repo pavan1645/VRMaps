@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>VR Maps</title>
+	<link rel="stylesheet" href="assets/photo-sphere-viewer.min.css">
+	
+	<script src="assets/three.min.js"></script>
+	<script src="assets/D.min.js"></script>
+	<script src="assets/DeviceOrientationControls.js"></script>
+	<script src="assets/uevent.min.js"></script>
+	<script src="assets/doT.min.js"></script>
+	<script src="assets/photo-sphere-viewer.min.js"></script>
+	<link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+	<style type="text/css">
+		.custom-button{
+			
+		}
+	</style>
+</head>
+<body data-gr-c-s-loaded="true" style="margin: 0px auto; text-align: center;">
+	<h1>VR Maps</h1>
+	<div id="psv" style="width: 80%; margin: 0px auto">
+		
+	</div>
+	<br>
+	
+	<div id="itdeptdesc" style="display: none;">
+		<h2>IT Department Staff Room</h2>
+		<p>
+			This is Room No. 602.<br>
+			Also known as IT Department staff room.
+		</p>
+	</div>
+	<script>
+		var viewer = PhotoSphereViewer({
+			container: document.getElementById('psv'),
+			panorama: 'pano.jpg',
+			time_anim: false,
+			size: {
+				height: 700
+			},
+			gyroscope: true,
+			navbar: [
+			'gyroscope',
+			'autorotate',
+			'zoom',
+			'markers',
+			{
+				id: 'my-button',
+				title: 'Hello world',
+				className: 'custom-button',
+				content: "<i class='fas fa-step-backward'></i>",
+				onClick: function () {
+					alert('Hello from custom button');
+				}
+			},
+			{
+				id: 'my-button',
+				title: 'Hello world',
+				className: 'custom-button',
+				content: "<i class='fas fa-play'></i>",
+				onClick: function () {
+					alert('Hello from custom button');
+				}
+			},
+			{
+				id: 'my-button',
+				title: 'Hello world',
+				className: 'custom-button',
+				content: "<i class='fas fa-pause'></i>",
+				onClick: function () {
+					alert('Hello from custom button');
+				}
+			},
+			{
+				id: 'my-button',
+				title: 'Hello world',
+				className: 'custom-button',
+				content: "<i class='fas fa-step-forward'></i>",
+				onClick: function () {
+					alert('Hello from custom button');
+				}
+			},
+			'caption',
+			'fullscreen'
+			],
+			markers: [
+			{
+				// polygon marker
+				id: 'polygon',
+				polygon_px: [4089,2002,4220,1998,4218,2218,4087,2214],
+				svgStyle: {
+					fill: 'rgba(200, 0, 0, 0.2)',
+					stroke: 'rgba(200, 0, 50, 0.8)',
+					'stroke-width': '2px'
+				},
+				tooltip:{
+					content: 'Room no. 602 : IT Dept.Staff Room',
+					position: 'bottom center'
+				},
+				content:document.getElementById('itdeptdesc').innerHTML
+			},
+			{
+				id: 'pano3',
+				circle: 20,
+				anchor: "0% 0%",
+				latitude:" -0.19572995016390782",
+				longitude: "1.6102829072439",
+				svgStyle: {
+					fill: 'rgba(250, 0, 0, 0.3)'
+				},
+				tooltip: {
+					content: 'view next image',
+					position: 'top center'
+				}
+			},
+			{
+				id:'pano4',
+				circle: 20,
+				anchor: "0% 0%",
+				latitude: -0.37193434419604676,
+				longitude: 3.22542322624861,
+				svgStyle: {
+					fill: 'rgba(250, 0, 0, 0.3)'
+				},
+				tooltip: {
+					content: 'Auditorium: Room No. 615',
+					position: 'top center'
+				}
+			}
+			]
+		});
+		viewer.on('select-marker', function (marker) {
+			if (marker.id == 'pano3') {
+				viewer.setPanorama('./pano3.jpg', true);
+				viewer.clearMarkers();
+				
+				viewer.addMarker({
+					id:'go back',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.14789787378735442,
+					longitude: 3.516494271989191,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'go back',
+						position: 'top center'
+					}
+				});
+				
+				
+				//lat -0.14789787378735442 go back
+				//long 3.516494271989191  go back
+			} 
+			else if(marker.id == 'pano4'){
+				viewer.setPanorama('./pano4.jpg', true);
+				viewer.clearMarkers();
+				
+				viewer.addMarker({
+					id:'go back',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.06842839066407747,
+					longitude: 3.3675126495675674,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'Go Back',
+						position: 'top center'
+					}
+				},true);
+				
+				viewer.addMarker({
+					id:'pano5',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.011984608210719783,
+					longitude: 1.6414494310850172,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'Go to next Image',
+						position: 'top center'
+					}
+				},true);
+				
+				//go back marker
+				//lat -0.06842839066407747
+				//long 3.3675126495675674
+				
+				//go to pano 5
+				//lat -0.011984608210719783
+				//long 1.6414494310850172
+				
+			}
+			else if(marker.id == 'pano5'){
+				viewer.setPanorama('./pano5.jpg', true);
+				viewer.clearMarkers();
+				
+				
+				//go back marker
+				//lat -0.1027243895746297
+				//long 5.6002474231683586
+				viewer.addMarker({
+					id: 'go back',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.1027243895746297 ,
+					longitude: 5.6002474231683586,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'Go Back',
+						position: 'top center'
+					}
+				});
+				
+				viewer.addMarker({
+					id: 'pano4',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.3408404274102872, //TODO
+					longitude: 6.231588123725978,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'Go to previous image',
+						position: 'top center'
+					}
+				});
+				
+				//go to pano 4
+				//lat 1.6414494310850172
+				//long 6.226686714779327
+			}
+			
+			
+			else if(marker.id=='go back'){
+				viewer.setPanorama('./pano.jpg', true);
+				viewer.clearMarkers();
+				
+				viewer.addMarker({
+					id: 'polygon',
+					polygon_px: [4089,2002,4220,1998,4218,2218,4087,2214],
+					svgStyle: {
+						fill: 'rgba(200, 0, 0, 0.2)',
+						stroke: 'rgba(200, 0, 50, 0.8)',
+						'stroke-width': '2px'
+					},
+					tooltip:{
+						content: 'Room no. 602 : IT Dept.Staff Room',
+						position: 'bottom center'
+					},
+					content:document.getElementById('itdeptdesc').innerHTML
+				},true);
+				viewer.addMarker({
+					id: 'pano3',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.19572995016390782,
+					longitude: 1.6102829072439,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'view next image',
+						position: 'top center'
+					}
+				},true);
+				
+				viewer.addMarker({
+					id:'pano4',
+					circle: 20,
+					anchor: "0% 0%",
+					latitude: -0.37193434419604676,
+					longitude: 3.22542322624861,
+					svgStyle: {
+						fill: 'rgba(250, 0, 0, 0.3)'
+					},
+					tooltip: {
+						content: 'Auditorium: Room No. 615',
+						position: 'top center'
+					}
+				},true);
+				
+			}
+			
+			
+		});
+		viewer.on('click', function (e) {
+			console.log(e);
+		});
+	</script>
+</body>
+</html>

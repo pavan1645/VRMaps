@@ -110,5 +110,4 @@ router.post("/marker/:id", (req, res) => {
 		});
 	});
 });
-
 module.exports = router;
