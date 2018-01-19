@@ -81,6 +81,7 @@ router.post("/pano/:id/marker",(req,res) =>{
 		tooltip_content: req.body.tooltip_content
 	});
 	
+	console.log(marker);
 	addMarker(marker,(marker) => {
 		Pano.find({"image_id":req.params.id}).exec()
 		.then((pano) => { 

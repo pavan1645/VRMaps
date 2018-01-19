@@ -11,4 +11,7 @@ export class Marker {
 			console.log(res);
 		});
 	}
+	public addMarker(id,marker){
+		this.mainService.addMarker(id,marker)
+	}
 }
