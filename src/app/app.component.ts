@@ -15,7 +15,7 @@ declare var $: any;
 export class AppComponent implements OnInit {
 	private addMarkers: Function;
 	private  viewer: any;
-	private id: string;
+	public id : string = "pano1";
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
@@ -34,24 +34,24 @@ export class AppComponent implements OnInit {
 				'zoom',
 				'markers',
 				'caption',
-				'fullscreen'
-				
+				'fullscreen'		
 			],
 			gyroscope: true
 		});
 		//console.log(viewer.isGyroscopeEnabled());
 		viewer.once('panorama-loaded', () => {
-			this.id='pano1';
-			pano.load(viewer,"pano1");
+			pano.load(viewer,this.id);
 		});
 		viewer.on('dblclick', (e) => {
+			console.log(this.id + " on");
 			$(".formPost").css("display","block");
 			$("#lat").val(e.latitude);
 			$("#long").val(e.longitude);
 		});
-		viewer.on('select-marker', function (marker) {
+		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
 			pano.load(viewer, marker.id);
+			console.log(this.id + " selected");
 		});
 	}
 	addMarker(){
@@ -61,10 +61,7 @@ export class AppComponent implements OnInit {
 			latitude:$("#lat").val(),
 			longitude:$("#long").val()
 		};
-
 		let marker:Marker=new Marker(this.mainService);
-
-		marker.addMarker(this.id,newMarker);
-
+		marker.addMarker(this.viewer,this.id,newMarker);
 	}
 }

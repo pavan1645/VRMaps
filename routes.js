@@ -80,40 +80,42 @@ router.post("/pano/:id/marker",(req,res) =>{
 		image_id: req.body.image_id,
 		tooltip_content: req.body.tooltip_content
 	});
-	
-	console.log(marker);
-	addMarker(marker,(marker) => {
-		Pano.find({"image_id":req.params.id}).exec()
-		.then((pano) => { 
-			pano.markers.push({
-				info:marker._id,
-				latitude:req.body.latitude,
-				longitude:req.body.longitude
-			});
-			
-			pano.save()
+	Marker.find({ "image_id": req.body.image_id}).exec()
+	.then((retMarker) => {
+		if (retMarker[0]) {
+			marker = retMarker[0];
+		}
+	})
+	.catch((err) => console.log(err))
+	.then(() => {
+		console.log(marker);
+		marker.save()
+		.then((marker) => {
+			Pano.find({ "id": req.params.id }).exec()
 			.then((pano) => {
-				res.send(pano);
-			});
-		});
-	});
+				pano[0].markers.push({
+					info: marker._id,
+					latitude: req.body.latitude,
+					longitude: req.body.longitude
+				});
+				pano[0].save()
+				.then((pano) => {
+					res.send(pano);
+				});
+			})
+		})
+		.catch((err) => console.log(err));
+	})
 });
 
-//Create marker
-function addMarker(marker,callback){
-	
-	marker.save()
-	.then((res) => callback(res));
-	
-}
 router.post("/marker", function (req, res) {
 	var marker = new Marker({
 		image_id: req.body.image_id,
 		tooltip_content: req.body.tooltip_content
 	});
-	addMarker(marker,(marker) => {
-		res.send(marker);
-	});
+	marker.save()
+	.then((res) => res.send(marker) )
+	.catch((err) => console.log(err) );
 });
 
 //Get single marker

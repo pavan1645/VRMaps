@@ -6,8 +6,9 @@
 	</div>
 	<br>
 	<div class="formPost">
-		<input type="text" placeholder="Image ID" id="image_id"/>
-		<input type="text" placeholder="Tooltip content" id="tooltip"/>
+		<h4><strong>Current pano </strong> {{id}}</h4>
+		<input type="text" placeholder="Image ID" id="image_id" value="pano6"/>
+		<input type="text" placeholder="Tooltip content" id="tooltip" value="601"/>
 		<input type="text" placeholder="" id="lat"/>
 		<input type="text" placeholder="" id="long"/>
 		<button (click)='addMarker()'>Add to DB</button>

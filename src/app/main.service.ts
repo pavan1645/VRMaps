@@ -19,8 +19,10 @@ export class MainService {
 		.map(res => res.json());
 	}
 	
-	addMarker(id: string,marker) {
-		return this.http.post("http://localhost:3000/api/pano/" + id + "/marker/",marker)
+	addMarker(id: string, marker) {
+		var headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		return this.http.post("http://localhost:3000/api/pano/" + id + "/marker", marker, { headers: headers })
 		.map(res => res.json());
 	}
 }

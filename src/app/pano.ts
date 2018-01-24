@@ -17,23 +17,25 @@ export class Pano {
 		this.mainService.getPano(id)
 		.subscribe(res => {
 			viewer.setPanorama("./assets/images/" + id + ".jpg");
-			let markers = res[0].markers;
-			markers.forEach(marker => {
-				viewer.addMarker({
-					id: marker.info.image_id,
-					circle: 20,
-					anchor: "0% 0%",
-					latitude: marker.latitude,
-					longitude: marker.longitude,
-					svgStyle: {
-						fill: 'rgba(250, 0, 0, 0.3)'
-					},
-					tooltip: {
-						content: marker.info.tooltip_content,
-						position: 'top center'
-					}
-				})
-			});
+			if (res[0].hasOwnProperty('markers')) {
+				let markers = res[0].markers;
+				markers.forEach(marker => {
+					viewer.addMarker({
+						id: marker.info.image_id,
+						circle: 20,
+						anchor: "0% 0%",
+						latitude: marker.latitude,
+						longitude: marker.longitude,
+						svgStyle: {
+							fill: 'rgba(250, 0, 0, 0.3)'
+						},
+						tooltip: {
+							content: marker.info.tooltip_content,
+							position: 'top center'
+						}
+					})
+				});
+			}
 			return res;
 		});
 	}	
