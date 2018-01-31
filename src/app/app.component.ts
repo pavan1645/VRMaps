@@ -16,11 +16,13 @@ export class AppComponent implements OnInit {
 	private addMarkers: Function;
 	private  viewer: any;
 	public id : string = "pano1";
+	public pano: any;
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
 		let viewer = this.viewer;
 		let pano = new Pano(this.mainService);
+		this.pano = pano;
 		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
 			panorama: './assets/images/pano1.jpg',
@@ -54,7 +56,7 @@ export class AppComponent implements OnInit {
 			console.log(this.id + " selected");
 		});
 	}
-	addMarker(){
+	addMarkerToPano(){
 		let newMarker = {
 			image_id:$("#image_id").val(),
 			tooltip_content:$("#tooltip").val(),
@@ -63,5 +65,15 @@ export class AppComponent implements OnInit {
 		};
 		let marker:Marker=new Marker(this.mainService);
 		marker.addMarker(this.viewer,this.id,newMarker);
+		this.pano.load(this.viewer, this.id);
+	}
+
+	addMarker(){
+		let marker = {
+			image_id: $('#m2db #image_id').val(),
+			tooltip_content: $('#m2db #tooltip').val(),
+		}
+		this.mainService.addMarker(marker)
+		.subscribe((res) => console.log(res));
 	}
 }

@@ -1,16 +1,39 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div  style="margin: 0px auto; text-align: center;">
+<div  style="margin: 10px auto; text-align: center;">
 	<h1>VR Maps</h1>
 	<div id="psv" style="width: 80%; margin: 0px auto">
 		
 	</div>
 	<br>
-	<div class="formPost">
-		<h4><strong>Current pano </strong> {{id}}</h4>
-		<input type="text" placeholder="Image ID" id="image_id" value="pano6"/>
-		<input type="text" placeholder="Tooltip content" id="tooltip" value="601"/>
-		<input type="text" placeholder="" id="lat"/>
-		<input type="text" placeholder="" id="long"/>
-		<button (click)='addMarker()'>Add to DB</button>
+	<div class="container">
+		<div class="row my-3">
+			<div class="formPost col-md-6 border border-dark" id="m2p">
+				<h2>Add marker to pano</h2>
+				<h4><strong>Current pano </strong> {{id}}</h4>
+				<div class="text-left">
+					Image ID:
+					<input class="m-2" type="text" placeholder="Image ID" id="image_id" />
+					<br> Tooltip Content:
+					<input class="m-2" type="text" placeholder="Tooltip content" id="tooltip" />
+					<br> Latitude:
+					<input class="m-2" type="text" placeholder="" id="lat" />
+					<br> Longitude:
+					<input class="m-2" type="text" placeholder="" id="long" />
+					<br>
+					<!-- <button class="my-2 btn" (click)='addMarkerToPano()'>Add to DB</button> -->
+				</div>
+			</div>
+			<div class="formPost col-md-6 border border-dark" id="m2db">
+				<h2>Add marker</h2>
+				<div class="text-left">
+					Marker ID:
+					<input class="m-2" type="text" placeholder="Marker ID" id="image_id" value="pano1"/>
+					<br> Tooltip Content:
+					<input class="m-2" type="text" placeholder="Tooltip content" id="tooltip" value="615 front door"/>
+					<br>
+					<button class="my-2 btn" (click)='addMarker()'>Add to DB</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

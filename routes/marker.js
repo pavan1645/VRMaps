@@ -11,8 +11,19 @@ router.post("/marker", function (req, res) {
 		tooltip_content: req.body.tooltip_content
 	});
 	marker.save()
-		.then((res) => res.send(marker))
-		.catch((err) => console.log(err));
+	.then((marker) => {
+		//Create an empty pano for the same
+		let pano = new Pano({
+			id: marker.image_id,
+			markers: []
+		});
+		pano.save()
+		.then((pano) => {
+			console.log("Empty pano created \n"+pano)
+			res.send(marker)
+		});
+	})
+	.catch((err) => console.log(err));
 });
 
 //Get single marker
@@ -25,14 +36,14 @@ router.get("/marker/:image_id", function (req, res) {
 //updating the whole marker
 router.post("/marker/:id", (req, res) => {
 	Marker.find({ "image_id": req.params.id }).exec()
-		.then((marker) => {
-			marker[0].image_id = req.params.id;
-			marker[0].tooltip_content = req.body.tooltip_content;
-			marker[0].save()
-				.then((x) => {
-					res.send(x);
-				});
+	.then((marker) => {
+		marker[0].image_id = req.params.id;
+		marker[0].tooltip_content = req.body.tooltip_content;
+		marker[0].save()
+		.then((x) => {
+			res.send(x);
 		});
+	});
 });
 
 module.exports = router;
