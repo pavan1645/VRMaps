@@ -92,8 +92,11 @@ router.post("/pano/:id/marker", (req, res) => {
 			});
 			pano[0].save()
 			.then((pano) => {
-				console.log("Pano saved: \n" + pano);
-				res.send(pano);
+				pano.populate("markers.info").execPopulate()
+				.then((pano) => {
+					console.log("Pano saved: \n" + pano);
+					res.send(pano)
+				})
 			});
 		})
 		.catch((err) => console.log("No Pano exists. Error: \n" + err))
