@@ -10,4 +10,4 @@ router.get("/path/:node1/:node2", (req, res) => {
 	.then((path) => res.send(path))
 })
 
-module.exports =	 router;
+module.exports = router;

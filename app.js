@@ -13,16 +13,10 @@ var markerRoutes = require('./routes/marker');
 var panoRoutes = require('./routes/pano');
 var pathRoutes = require('./routes/path');
 
-/* var graphObj = require('./graph');
-graphObj.addNode("pano3", "pano1");
-graphObj.addNode("pano1", "pano4");
-graphObj.addNode("pano4", "pano1");
-graphObj.addNode("pano1", "pano3");
-graphObj.addNode("pano4", "pano5");
-graphObj.addNode("pano5", "pano4");
-console.log(graphObj.getPath("pano1","pano5")); */
+var seedDB = require("./seeds");
 
 var app = express();
+seedDB();
 
 //Connect MongoDB
 mongoose.connect("mongodb://localhost/vrmaps", {
