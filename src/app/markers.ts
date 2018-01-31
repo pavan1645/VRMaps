@@ -14,9 +14,9 @@ export class Marker {
 		});
 	}
 	public addMarker(viewer,id,marker){
-		this.mainService.addMarker(id, marker)
+		/* this.mainService.addMarker(id, marker)
 		.subscribe(res => {
 			console.log(res);
-		});
+		}); */
 	}
 }

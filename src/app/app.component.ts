@@ -20,10 +20,7 @@ export class AppComponent implements OnInit {
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
-		let viewer = this.viewer;
-		let pano = new Pano(this.mainService);
-		this.pano = pano;
-		viewer = PhotoSphereViewer({
+		let viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
 			panorama: './assets/images/pano1.jpg',
 			time_anim: false,
@@ -40,32 +37,38 @@ export class AppComponent implements OnInit {
 			],
 			gyroscope: true
 		});
-		//console.log(viewer.isGyroscopeEnabled());
+
+		this.viewer = viewer;
+		let pano = new Pano(this.mainService, this.viewer);
+		this.pano = pano;
+		
 		viewer.once('panorama-loaded', () => {
-			pano.load(viewer,this.id);
+			pano.load(this.id);
 		});
+
 		viewer.on('dblclick', (e) => {
 			console.log(this.id + " on");
-			$(".formPost").css("display","block");
-			$("#lat").val(e.latitude);
-			$("#long").val(e.longitude);
+			$("#m2p #lat").val(e.latitude);
+			$("#m2p #long").val(e.longitude);
 		});
+
 		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
-			pano.load(viewer, marker.id);
+			pano.load(marker.id);
 			console.log(this.id + " selected");
 		});
 	}
 	addMarkerToPano(){
 		let newMarker = {
-			image_id:$("#image_id").val(),
-			tooltip_content:$("#tooltip").val(),
-			latitude:$("#lat").val(),
-			longitude:$("#long").val()
+			image_id: $("#m2p #image_id").val(),
+			latitude: $("#m2p #lat").val(),
+			longitude: $("#m2p #long").val()
 		};
-		let marker:Marker=new Marker(this.mainService);
-		marker.addMarker(this.viewer,this.id,newMarker);
-		this.pano.load(this.viewer, this.id);
+		this.mainService.addMarkerToPano(this.id, newMarker)
+		.subscribe((res) => {
+			console.log(res);
+			this.pano.load(this.id);
+		});
 	}
 
 	addMarker(){
@@ -74,6 +77,14 @@ export class AppComponent implements OnInit {
 			tooltip_content: $('#m2db #tooltip').val(),
 		}
 		this.mainService.addMarker(marker)
-		.subscribe((res) => console.log(res));
+		.subscribe((res) => {
+			console.log(res);
+			if (res.error) $('#m2db .text-muted').text(res.error);
+			else $('#m2db .text-muted').text("Added to DB");
+
+			setTimeout(function() {
+				$('#m2db .text-muted').text("");
+			}, 2000);
+		});
 	}
 }

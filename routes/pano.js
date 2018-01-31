@@ -41,9 +41,9 @@ function getAllMarkerId(markers) {
 
 //Get single pano
 router.get("/pano/:image_id", function (req, res) {
-	Pano.find({ "id": req.params.image_id }).populate("markers.info").exec((err, pano) => {
-		res.send(pano);
-	})
+	Pano.find({ "id": req.params.image_id }).populate("markers.info").exec()
+	.then((pano) => res.send(pano))
+	.catch((err) => res.json({"error":"No such pano!"}))
 });
 
 //Create pano
@@ -99,9 +99,9 @@ router.post("/pano/:id/marker", (req, res) => {
 				})
 			});
 		})
-		.catch((err) => console.log("No Pano exists. Error: \n" + err))
+		.catch((err) => res.json({"error":"No Pano exists."}))
 	})
-	.catch((err) => console.log("No Marker exists. Error: \n" + err))
+	.catch((err) => res.json({"error": "No Marker exists."}))
 });
 
 

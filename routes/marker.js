@@ -23,7 +23,7 @@ router.post("/marker", function (req, res) {
 			res.send(marker)
 		});
 	})
-	.catch((err) => console.log(err));
+	.catch((err) => res.json({"error":"Marker already exists"}));
 });
 
 //Get single marker
@@ -43,7 +43,8 @@ router.post("/marker/:id", (req, res) => {
 		.then((x) => {
 			res.send(x);
 		});
-	});
+	})
+	.catch((err) => res.json({"error":"No such marker"}));
 });
 
 module.exports = router;

@@ -11,8 +11,9 @@ export class Pano {
 	/**
 	* load
 	*/
-	constructor(private mainService: MainService) { }
-	public load(viewer, id) {
+	constructor(private mainService: MainService, private viewer: any) { }
+	public load(id) {
+		let viewer = this.viewer;
 		viewer.clearMarkers();
 		this.mainService.getPano(id)
 		.subscribe(res => {
