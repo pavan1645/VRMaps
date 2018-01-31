@@ -16,7 +16,10 @@ function getMarkerId(image_id) {
 	.then((marker) => {
 		return marker[0]._id;
 	})
-	.fail((err) => console.log(err));
+	.catch((err) => {
+		console.log(err);
+		return null;
+	});
 }
 
 function getAllMarkerId(markers) {
@@ -29,8 +32,10 @@ function getAllMarkerId(markers) {
 				if (index == markers.length - 1) {
 					resolve(markers);
 				}
-			});
+			})
+			.catch((err) => console.log(err));
 		});
+		resolve(null);
 	});
 }
 
@@ -50,50 +55,50 @@ router.post("/pano", function (req, res) {
 	let markers = req.body.markers;
 	let promise1 = getAllMarkerId(markers);
 	let promise2 = deletePano(req.body.id);
-
+	
 	Promise.all([promise1, promise2])
-		.then((values) => {
-			markers = values[0];
-			pano.save()
-				.then((res) => pano = res);
-			pano.markers = markers;
-			pano.save()
-				.then((pano) => res.json(pano))
-		});
+	.then((values) => {
+		if(values[0]) markers = values[0];
+		pano.save()
+		.then((res) => pano = res);
+		pano.markers = markers;
+		pano.save()
+		.then((pano) => {
+			console.log("Pano saved: \n"+pano)
+			res.json(pano)
+		})
+	});
 });
 
 //Add marker to pano
 router.post("/pano/:id/marker", (req, res) => {
-	var marker = new Marker({
-		image_id: req.body.image_id,
-		tooltip_content: req.body.tooltip_content
-	});
 	Marker.find({ "image_id": req.body.image_id }).exec()
-		.then((retMarker) => {
-			if (retMarker[0]) {
-				marker = retMarker[0];
+	.then((retMarker) => {
+		let marker = retMarker[0];
+		Pano.find({ "id": req.params.id }).exec()
+		.then((pano) => {
+			//removes marker if already exists
+			for (var i = 0; i < pano[0].markers.length; i++) {
+				if (String(pano[0].markers[i].info) == String(marker._id)) {
+					pano[0].markers.splice(i, 1);
+					break;
+				}
 			}
+			//add marker to markers array
+			pano[0].markers.push({
+				info: marker._id,
+				latitude: req.body.latitude,
+				longitude: req.body.longitude
+			});
+			pano[0].save()
+			.then((pano) => {
+				console.log("Pano saved: \n" + pano);
+				res.send(pano);
+			});
 		})
-		.catch((err) => console.log(err))
-		.then(() => {
-			console.log(marker);
-			marker.save()
-				.then((marker) => {
-					Pano.find({ "id": req.params.id }).exec()
-						.then((pano) => {
-							pano[0].markers.push({
-								info: marker._id,
-								latitude: req.body.latitude,
-								longitude: req.body.longitude
-							});
-							pano[0].save()
-								.then((pano) => {
-									res.send(pano);
-								});
-						})
-				})
-				.catch((err) => console.log(err));
-		})
+		.catch((err) => console.log("No Pano exists. Error: \n" + err))
+	})
+	.catch((err) => console.log("No Marker exists. Error: \n" + err))
 });
 
 
