@@ -3,7 +3,7 @@ var router = express.Router();
 
 var Pano = require("../models/pano");
 var Marker = require("../models/marker");
-
+var Graph = require("../graph");
 
 function deletePano(idd) {
 	return Pano.deleteOne({ id: idd }).exec()
@@ -95,6 +95,7 @@ router.post("/pano/:id/marker", (req, res) => {
 				pano.populate("markers.info").execPopulate()
 				.then((pano) => {
 					console.log("Pano saved: \n" + pano);
+					Graph.addNode(req.params.id, req.body.image_id);
 					res.send(pano)
 				})
 			});

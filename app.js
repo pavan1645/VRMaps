@@ -11,9 +11,15 @@ var Marker = require("./models/marker");
 
 var markerRoutes = require('./routes/marker');
 var panoRoutes = require('./routes/pano');
+var pathRoutes = require('./routes/path');
 
 /* var graphObj = require('./graph');
-graphObj.addNode("pano1","pano2");
+graphObj.addNode("pano3", "pano1");
+graphObj.addNode("pano1", "pano4");
+graphObj.addNode("pano4", "pano1");
+graphObj.addNode("pano1", "pano3");
+graphObj.addNode("pano4", "pano5");
+graphObj.addNode("pano5", "pano4");
 console.log(graphObj.getPath("pano1","pano5")); */
 
 var app = express();
@@ -45,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //routes
 app.use('/api/', markerRoutes);
 app.use('/api/', panoRoutes);
+app.use('/api/', pathRoutes);
 
 app.listen(3000, function() {
 	console.log("Serving on port 3000");
