@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
 			],
 			gyroscope: true
 		});
-
+		
 		this.viewer = viewer;
 		let pano = new Pano(this.mainService, this.viewer);
 		this.pano = pano;
@@ -45,13 +45,13 @@ export class AppComponent implements OnInit {
 		viewer.once('panorama-loaded', () => {
 			pano.load(this.id);
 		});
-
+		
 		viewer.on('dblclick', (e) => {
 			console.log(this.id + " on");
 			$("#m2p #lat").val(e.latitude);
 			$("#m2p #long").val(e.longitude);
 		});
-
+		
 		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
 			pano.load(marker.id);
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
 			this.pano.load(this.id);
 		});
 	}
-
+	
 	addMarker(){
 		let marker = {
 			image_id: $('#m2db #image_id').val(),
@@ -81,10 +81,23 @@ export class AppComponent implements OnInit {
 			console.log(res);
 			if (res.error) $('#m2db .text-muted').text(res.error);
 			else $('#m2db .text-muted').text("Added to DB");
-
+			
 			setTimeout(function() {
 				$('#m2db .text-muted').text("");
 			}, 2000);
 		});
+	}
+	
+	getPath(){
+		let src = $('#src').val();
+		let dest = $('#dest').val();
+		this.mainService.getPath(src, dest)
+		.subscribe(res => {
+			if (res.error) $('#path .text-muted').text(res.error);
+			else $('#path .text-muted').text(res);
+			setTimeout(function () {
+				$('#path .text-muted').text("");
+			}, 3000);
+		})
 	}
 }

@@ -32,4 +32,9 @@ export class MainService {
 		return this.http.post("http://localhost:3000/api/marker/", marker, { headers: headers })
 		.map(res => res.json());
 	}
+	
+	getPath(src, dest) {
+		return this.http.get("http://localhost:3000/api/path/" + src+"/"+dest+"/")
+		.map(res => res.json());
+	}
 }
