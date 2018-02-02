@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 	private  viewer: any;
 	public id : string = "pano1";
 	public pano: any;
+	public path: any = [];
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
@@ -47,15 +48,17 @@ export class AppComponent implements OnInit {
 		});
 		
 		viewer.on('dblclick', (e) => {
-			console.log(this.id + " on");
 			$("#m2p #lat").val(e.latitude);
 			$("#m2p #long").val(e.longitude);
 		});
 		
 		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
-			pano.load(marker.id);
-			console.log(this.id + " selected");
+			console.log(pano.load(marker.id));
+			/* .then(() => {
+				console.log(this.pano.pano);
+			}); */
+			this.colorMarkers();
 		});
 	}
 	addMarkerToPano(){
@@ -95,9 +98,24 @@ export class AppComponent implements OnInit {
 		.subscribe(res => {
 			if (res.error) $('#path .text-muted').text(res.error);
 			else $('#path .text-muted').text(res);
-			setTimeout(function () {
-				$('#path .text-muted').text("");
-			}, 3000);
+			$('#path .text-muted').text("");
+			this.path = res;
+			this.colorMarkers();
 		})
+	}
+
+	colorMarkers(){
+		let currMarkers = this.pano.pano.markers;
+		//console.log(this.viewer);
+		if (this.path.length > 0) {
+			currMarkers.forEach(marker => {
+				if (this.path.indexOf(marker.info.image_id) > 0) {
+					if(this.id != marker.info.image_id) {
+						let currMarker  = this.viewer.getMarker(marker.info.image_id);
+						currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}})
+					}
+				}
+			});
+		}
 	}
 }
