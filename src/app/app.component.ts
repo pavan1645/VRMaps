@@ -114,13 +114,23 @@ export class AppComponent implements OnInit {
 	
 	colorMarkers(){
 		let currMarkers = this.pano.pano.markers;
+		let currMarker;
 		currMarkers.forEach(marker => {
 			if (this.path.indexOf(marker.info.image_id) > -1 && this.path.length > 0) {
 				if(this.id != marker.info.image_id) {
-					let currMarker  = this.viewer.getMarker(marker.info.image_id);
+					currMarker  = this.viewer.getMarker(marker.info.image_id);
 					currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}})
 				}
 			}
 		});
+		//rotating camera to path next
+		let index = this.path.indexOf(this.id);
+		for (var i = index; i < this.path.length; i++) {
+			currMarker = this.path[i];
+			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {
+				this.viewer.gotoMarker(currMarker, 1000);
+				break;
+			}
+		}
 	}
 }
