@@ -54,11 +54,10 @@ export class AppComponent implements OnInit {
 		
 		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
-			console.log(pano.load(marker.id));
-			/* .then(() => {
-				console.log(this.pano.pano);
-			}); */
-			this.colorMarkers();
+			pano.load(marker.id)
+			.then(() => {
+				this.colorMarkers();
+			});
 		});
 	}
 	addMarkerToPano(){
@@ -103,19 +102,16 @@ export class AppComponent implements OnInit {
 			this.colorMarkers();
 		})
 	}
-
+	
 	colorMarkers(){
 		let currMarkers = this.pano.pano.markers;
-		//console.log(this.viewer);
-		if (this.path.length > 0) {
-			currMarkers.forEach(marker => {
-				if (this.path.indexOf(marker.info.image_id) > 0) {
-					if(this.id != marker.info.image_id) {
-						let currMarker  = this.viewer.getMarker(marker.info.image_id);
-						currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}})
-					}
+		currMarkers.forEach(marker => {
+			if (this.path.indexOf(marker.info.image_id) > -1 && this.path.length > 0) {
+				if(this.id != marker.info.image_id) {
+					let currMarker  = this.viewer.getMarker(marker.info.image_id);
+					currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}})
 				}
-			});
-		}
+			}
+		});
 	}
 }
