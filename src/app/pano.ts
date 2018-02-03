@@ -32,6 +32,7 @@ export class Pano {
 				this.viewer = viewer;
 				//console.log(this.viewer.showMarkersList);
 				this.pano = res[0];
+				resolve();
 			});
 		});
 	}	
