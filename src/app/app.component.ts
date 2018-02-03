@@ -97,10 +97,19 @@ export class AppComponent implements OnInit {
 		.subscribe(res => {
 			if (res.error) $('#path .text-muted').text(res.error);
 			else $('#path .text-muted').text(res);
-			$('#path .text-muted').text("");
 			this.path = res;
-			this.colorMarkers();
+			//reset previous colors and add load again
+			this.pano.load(this.id)
+			.then(() => {
+				this.colorMarkers();
+			});
 		})
+	}
+	
+	clearPath(){
+		this.path = [];
+		this.pano.load(this.id);
+		$('#path .text-muted').text("");
 	}
 	
 	colorMarkers(){
