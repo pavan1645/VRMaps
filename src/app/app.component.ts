@@ -60,6 +60,12 @@ export class AppComponent implements OnInit {
 			});
 		});
 	}
+	
+	viewPano(){
+		this.pano.load($("#pano #loc").val())
+		.then(console.log("Loaded pano"));
+	}
+
 	addMarkerToPano(){
 		let newMarker = {
 			image_id: $("#m2p #image_id").val(),
