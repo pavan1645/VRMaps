@@ -28,6 +28,7 @@
     "cors": "^2.8.4",
     "jquery": "^3.2.1",
     "mongoose": "^4.13.9",
+    "ng2-completer": "^1.6.3",
     "node-dijkstra": "^2.5.0",
     "path": "^0.12.7",
     "q": "^1.5.1",

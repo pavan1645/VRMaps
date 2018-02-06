@@ -4,6 +4,8 @@ import { Marker } from './markers';
 import { Pano } from './pano';
 //import * from 'jquery';
 
+import { CompleterService, CompleterData } from 'ng2-completer';
+
 declare var PhotoSphereViewer: any;
 declare var $: any;
 
@@ -13,13 +15,16 @@ declare var $: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+	protected searchStr: string;
+	protected dataService: CompleterData;
 	private addMarkers: Function;
 	private  viewer: any;
 	public id : string = "pano1";
 	public pano: any;
 	public path: any = [];
 	public allMarkers: any = [];
-	constructor(private mainService: MainService) { }
+	constructor(private mainService: MainService, private completerService: CompleterService) { 
+	 }
 	
 	ngOnInit() {
 		let viewer = PhotoSphereViewer({
@@ -62,16 +67,22 @@ export class AppComponent implements OnInit {
 		});
 
 		this.mainService.getAllMarkers()
-		.subscribe((res) => this.allMarkers = res);
+		.subscribe((res) => {
+			this.allMarkers = res; 
+			this.dataService = this.completerService.local(this.allMarkers, 'tooltip_content', 'tooltip_content');
+		});
 	}
-	
+	itemSelected(e) {
+		console.log(e);
+	}
 	viewPano(){
-		this.pano.load($("#pano #loc").val())
+		
+		/* this.pano.load($("#pano #loc").val())
 		.then(() => {
 			this.id = $("#pano #loc").val();
 			this.colorMarkers();
 			console.log(this.allMarkers);
-		});
+		}); */
 	}
 	
 	addMarkerToPano(){

@@ -25,7 +25,7 @@
 				<h2>Go To</h2>
 				<div class="text-left">
 					Location:
-					<input class="m-2" type="text" placeholder="Location" id="loc" />
+					<ng2-completer [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="2" (selected)="itemSelected($event)"></ng2-completer>
 					<br> 
 					<button class="btn" (click)="viewPano()">View Pano</button>
 					<div class=" text-muted"></div>
