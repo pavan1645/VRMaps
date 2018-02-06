@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
 	public id : string = "pano1";
 	public pano: any;
 	public path: any = [];
+	public allMarkers: any = [];
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
@@ -59,6 +60,9 @@ export class AppComponent implements OnInit {
 				this.colorMarkers();
 			});
 		});
+
+		this.mainService.getAllMarkers()
+		.subscribe((res) => this.allMarkers = res);
 	}
 	
 	viewPano(){
@@ -66,6 +70,7 @@ export class AppComponent implements OnInit {
 		.then(() => {
 			this.id = $("#pano #loc").val();
 			this.colorMarkers();
+			console.log(this.allMarkers);
 		});
 	}
 	

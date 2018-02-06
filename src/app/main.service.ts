@@ -9,6 +9,11 @@ export class MainService {
 	constructor(private http: Http) {
 	}
 	
+	getAllMarkers(){
+		return this.http.get("http://localhost:3000/api/marker")
+		.map(res => res.json());
+	}
+	
 	getMarker(id:string){
 		return this.http.get("http://localhost:3000/api/marker/"+id)
 		.map(res => res.json());

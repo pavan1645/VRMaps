@@ -26,6 +26,13 @@ router.post("/marker", function (req, res) {
 	.catch((err) => res.json({"error":"Marker already exists"}));
 });
 
+//Get all markers
+router.get("/marker", function (req, res) {
+	Marker.find({}).select("-_id -__v").exec((err, markers) => {
+		res.json(markers);
+	});
+});
+
 //Get single marker
 router.get("/marker/:image_id", function (req, res) {
 	Marker.find({ "image_id": req.params.image_id }).exec((err, marker) => {
