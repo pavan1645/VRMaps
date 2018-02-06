@@ -63,9 +63,12 @@ export class AppComponent implements OnInit {
 	
 	viewPano(){
 		this.pano.load($("#pano #loc").val())
-		.then(console.log("Loaded pano"));
+		.then(() => {
+			this.id = $("#pano #loc").val();
+			this.colorMarkers();
+		});
 	}
-
+	
 	addMarkerToPano(){
 		let newMarker = {
 			image_id: $("#m2p #image_id").val(),
