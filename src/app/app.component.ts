@@ -4,7 +4,10 @@ import { Marker } from './markers';
 import { Pano } from './pano';
 //import * from 'jquery';
 
-import { CompleterService, CompleterData } from 'ng2-completer';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
@@ -15,16 +18,14 @@ declare var $: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-	protected searchStr: string;
-	protected dataService: CompleterData;
 	private addMarkers: Function;
 	private  viewer: any;
 	public id : string = "pano1";
 	public pano: any;
 	public path: any = [];
 	public allMarkers: any = [];
-	constructor(private mainService: MainService, private completerService: CompleterService) { 
-	 }
+	public model: any;
+	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
 		let viewer = PhotoSphereViewer({
@@ -65,24 +66,19 @@ export class AppComponent implements OnInit {
 				this.colorMarkers();
 			});
 		});
-
+		
 		this.mainService.getAllMarkers()
 		.subscribe((res) => {
 			this.allMarkers = res; 
-			this.dataService = this.completerService.local(this.allMarkers, 'tooltip_content', 'tooltip_content');
 		});
 	}
-	itemSelected(e) {
-		console.log(e);
-	}
+	
 	viewPano(){
-		
-		/* this.pano.load($("#pano #loc").val())
+		this.pano.load(this.model.image_id)
 		.then(() => {
-			this.id = $("#pano #loc").val();
+			this.id = this.model.image_id;
 			this.colorMarkers();
-			console.log(this.allMarkers);
-		}); */
+		});
 	}
 	
 	addMarkerToPano(){
@@ -158,4 +154,14 @@ export class AppComponent implements OnInit {
 			}
 		}
 	}
+	
+	
+	search = (text$: Observable<string>) => {
+		return text$
+		.debounceTime(200)
+		.map(term => term === '' ? []
+		: this.allMarkers.filter(v => v.tooltip_content.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+	}
+	
+	formatter = (x: { tooltip_content: string }) => x.tooltip_content;
 }

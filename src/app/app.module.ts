@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpModule} from '@angular/http';
 
-import { FormsModule } from "@angular/forms";
-import { Ng2CompleterModule } from "ng2-completer";
+import { FormsModule } from "@angular/forms"; 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 
@@ -16,7 +16,7 @@ import { MainService } from './main.service';
   imports: [
     HttpModule,
 	BrowserModule,
-	Ng2CompleterModule,
+	NgbModule.forRoot(),
 	FormsModule
   ],
   providers: [MainService],
