@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require("fs");
 
 var Pano = require("../models/pano");
 var Marker = require("../models/marker");
@@ -96,6 +97,11 @@ router.post("/pano/:id/marker", (req, res) => {
 				.then((pano) => {
 					console.log("Pano saved: \n" + pano);
 					Graph.addNode(req.params.id, req.body.image_id);
+					var buffer = "graphObj.addNode(\""+req.params.id+"\", \""+req.body.image_id+"\");\n";
+					fs.appendFile("path.txt",buffer, (err) => {
+						if(err) console.log(err);
+						else console.log("Appended to file");
+					})
 					res.send(pano)
 				})
 			});
