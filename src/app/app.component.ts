@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MainService } from './main.service';
-import { Marker } from './markers';
 import { Pano } from './pano';
 //import * from 'jquery';
 

@@ -1,5 +1,4 @@
 import { MainService } from './main.service';
-import { Marker } from "./markers";
 export class Pano {
 	pano: any;
 	constructor(private mainService: MainService, private viewer: any) { }
