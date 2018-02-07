@@ -12,9 +12,9 @@
 				<h2>Get Path</h2>
 				<div class="text-left">
 					Source:
-					<input class="m-2" type="text" placeholder="Source node" id="src" [(value)]="id" />
+					<input class="m-2" type="text" placeholder="Source node" id="src" [(value)]="srcModel.tooltip_content"  [(ngModel)]="srcModel" [ngbTypeahead]="search"  [resultTemplate]="rt" [inputFormatter]="formatter" />
 					<br> Destination:
-					<input class="m-2" type="text" placeholder="Destination node" id="dest" />
+					<input class="m-2" type="text" placeholder="Destination node" id="dest"  [(ngModel)]="destModel" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter"/>
 					<br>
 					<button class="btn" (click)="getPath()">Show Path</button>
 					<button class="btn" (click)="clearPath()">Clear Path</button>
@@ -28,7 +28,7 @@
 					<ng-template #rt let-r="result" let-t="term">
 						{{ r.tooltip_content}}
 					</ng-template>
-					<input id="typeahead-template" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search"  [resultTemplate]="rt" [inputFormatter]="formatter" />
+					<input type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search"  [resultTemplate]="rt" [inputFormatter]="formatter" />
 					<br> 
 					<button class="btn" (click)="viewPano()">View Pano</button>
 					<div class=" text-muted"></div>

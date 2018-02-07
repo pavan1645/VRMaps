@@ -25,6 +25,8 @@ export class AppComponent implements OnInit {
 	public path: any = [];
 	public allMarkers: any = [];
 	public model: any;
+	public srcModel: any = { image_id: "pano1", tooltip_content: "615 front door" };
+	public destModel: any;
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
@@ -61,6 +63,7 @@ export class AppComponent implements OnInit {
 		
 		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
+			this.setSourceModel(this.id);
 			pano.load(marker.id)
 			.then(() => {
 				this.colorMarkers();
@@ -77,6 +80,7 @@ export class AppComponent implements OnInit {
 		this.pano.load(this.model.image_id)
 		.then(() => {
 			this.id = this.model.image_id;
+			this.setSourceModel(this.id);
 			this.colorMarkers();
 		});
 	}
@@ -112,8 +116,8 @@ export class AppComponent implements OnInit {
 	}
 	
 	getPath(){
-		let src = $('#src').val();
-		let dest = $('#dest').val();
+		let src = this.srcModel.image_id;
+		let dest = this.destModel.image_id;
 		this.mainService.getPath(src, dest)
 		.subscribe(res => {
 			if (res.error) $('#path .text-muted').text(res.error);
@@ -156,6 +160,8 @@ export class AppComponent implements OnInit {
 	}
 	
 	
+	setSourceModel = (id: string) => this.srcModel = this.allMarkers.find(o => o.image_id === id);
+
 	search = (text$: Observable<string>) => {
 		return text$
 		.debounceTime(200)
