@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
 			container: document.getElementById('psv'),
 			panorama: './assets/images/pano1.jpg',
 			time_anim: false,
+			caption: "<strong>VR Maps</strong>",
 			size: {
 				height: 700
 			},
