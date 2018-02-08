@@ -47,6 +47,6 @@ app.use('/api/', markerRoutes);
 app.use('/api/', panoRoutes);
 app.use('/api/', pathRoutes);
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
 	console.log("Serving on port 3000");
 });
