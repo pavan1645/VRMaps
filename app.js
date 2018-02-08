@@ -19,7 +19,7 @@ var app = express();
 seedDB();
 
 //Connect MongoDB
-mongoose.connect("mongodb://localhost/vrmaps", {
+mongoose.connect("mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps", {
 	useMongoClient: true
 });
 mongoose.Promise = q.Promise;
