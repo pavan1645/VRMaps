@@ -15,9 +15,9 @@
 					<br> Destination:
 					<input class="m-2" type="text" placeholder="Destination node" id="dest"  [(ngModel)]="destModel" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter"/>
 					<br>
-					<button class="btn" (click)="getPath()">Show Path</button>
+					<button class="btn mb-1" (click)="getPath()">Show Path</button>
 					<button class="btn" (click)="clearPath()">Clear Path</button>
-					<div class=" text-muted"></div>
+					<div id="text-utility" [class]="pathClass"></div>
 				</div>
 			</div>
 			<div class="col-md-6 border border-dark py-3" id="pano">
@@ -29,8 +29,8 @@
 					</ng-template>
 					<input type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search"  [resultTemplate]="rt" [inputFormatter]="formatter" />
 					<br> 
-					<button class="btn" (click)="viewPano()">View Pano</button>
-					<div class=" text-muted"></div>
+					<button class="btn mb-1" (click)="viewPano()">View Pano</button>
+					<p id="text-utility" [class]="panoClass"></p>
 				</div>
 			</div>
 		</div>

@@ -26,6 +26,8 @@ export class AppComponent implements OnInit {
 	public model: any;
 	public srcModel: any = { image_id: "pano1", tooltip_content: "615 front door" };
 	public destModel: any;
+	public panoClass: string = "text-secondary";
+	public pathClass: string = "text-secondary";
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
@@ -62,6 +64,8 @@ export class AppComponent implements OnInit {
 		
 		viewer.on('select-marker', (marker) => {
 			this.id=marker.id;
+			if (this.path.length > 0 && this.id == this.path[this.path.length - 1]) this.setText("path", "Destination Reached", 1); 
+			else this.setText("path", "", 0); 
 			this.setSourceModel(this.id);
 			pano.load(marker.id)
 			.then(() => {
@@ -77,20 +81,14 @@ export class AppComponent implements OnInit {
 	
 	viewPano(){
 		/* Error Handling Stuff */
-		if (!this.model) {
-			$("#pano .text-muted").text("Enter location first");
-			return;
-		}
-		if(!this.model.image_id) {
-			$("#pano .text-muted").text("Wrong input, please select from suggestions list");
-			return;
-		}
+		if (!this.model) { this.setText("pano","Enter location first", -1); return; }
+		if (!this.model.image_id) { this.setText("pano","Wrong input, please select from suggestions list", -1); return; }
 		this.pano.load(this.model.image_id)
 		.then(() => {
 			this.id = this.model.image_id;
 			this.setSourceModel(this.id);
 			this.colorMarkers();
-			$("#pano .text-muted").text("");
+			this.setText("pano","Location Loaded!", 1);
 		});
 	}
 	
@@ -126,28 +124,17 @@ export class AppComponent implements OnInit {
 	
 	getPath(){
 		/* Error Handling Stuff */
-		if (!this.srcModel || !this.destModel) {
-			$('#path .text-muted').text("Enter source and destination");
-			return;
-		}
-		if (!this.srcModel.image_id || !this.destModel.image_id) {
-			$('#path .text-muted').text("Wrong input, please select from suggestions list");
-			return;
-		}
+		if (!this.srcModel || !this.destModel) { this.setText("path", "Enter source and destination", -1); return; }
+		if (!this.srcModel.image_id || !this.destModel.image_id) { this.setText("path", "Wrong input, please select from suggestions list", -1); return; }
+
 		let src = this.srcModel.image_id;
 		let dest = this.destModel.image_id;
 		/* Error Handling Stuff */
-		if (src == dest) {
-			$('#path .text-muted').text("Same source and destination found");
-			return;
-		}
+		if (src == dest) { this.setText("path", "Same source and destination found", -1); return; }
 		this.mainService.getPath(src, dest)
 		.subscribe(res => {
-			if (res.error) {
-				$('#path .text-muted').text(res.error);
-				return;
-			}
-			else $('#path .text-muted').text(res);
+			if (res.error) { this.setText("path", res.error, -1); return; }
+			else this.setText("path", res, 1);
 			this.path = res;
 			//reset previous colors and add load again
 			this.pano.load(this.id)
@@ -160,7 +147,7 @@ export class AppComponent implements OnInit {
 	clearPath(){
 		this.path = [];
 		this.pano.load(this.id);
-		$('#path .text-muted').text("");
+		this.setText("path", "", 0);
 	}
 	
 	colorMarkers(){
@@ -184,7 +171,24 @@ export class AppComponent implements OnInit {
 			}
 		}
 	}
-	
+
+	setText(type: string, msg: string, status:any){
+		if (type == "path") {
+			$('#path #text-utility').text(msg);
+			switch (status) {
+				case -1: this.pathClass = "text-danger"; break;
+				case 1: this.pathClass = "text-success"; break;
+				default: this.pathClass= "text-secondary"; break;
+			}
+		} else {
+			$('#pano #text-utility').text(msg);
+			switch (status) {
+				case -1: this.panoClass = "text-danger"; break;
+				case 1: this.panoClass = "text-success"; break;
+				default: this.panoClass = "text-secondary"; break;
+			}
+		}
+	}
 	
 	setSourceModel = (id: string) => this.srcModel = this.allMarkers.find(o => o.image_id === id);
 
