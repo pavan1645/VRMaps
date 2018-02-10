@@ -76,11 +76,21 @@ export class AppComponent implements OnInit {
 	}
 	
 	viewPano(){
+		/* Error Handling Stuff */
+		if (!this.model) {
+			$("#pano .text-muted").text("Enter location first");
+			return;
+		}
+		if(!this.model.image_id) {
+			$("#pano .text-muted").text("Wrong input, please select from suggestions list");
+			return;
+		}
 		this.pano.load(this.model.image_id)
 		.then(() => {
 			this.id = this.model.image_id;
 			this.setSourceModel(this.id);
 			this.colorMarkers();
+			$("#pano .text-muted").text("");
 		});
 	}
 	
@@ -115,14 +125,22 @@ export class AppComponent implements OnInit {
 	}
 	
 	getPath(){
-		//error handling
-		if (!this.srcModel || !this.destModel || !this.srcModel.image_id || !this.destModel.image_id) {
-			$('#path .text-muted').text("Wrong input");
+		/* Error Handling Stuff */
+		if (!this.srcModel || !this.destModel) {
+			$('#path .text-muted').text("Enter source and destination");
 			return;
 		}
-		//if () { $('#path .text-muted').text("Wrong input"); return};
+		if (!this.srcModel.image_id || !this.destModel.image_id) {
+			$('#path .text-muted').text("Wrong input, please select from suggestions list");
+			return;
+		}
 		let src = this.srcModel.image_id;
 		let dest = this.destModel.image_id;
+		/* Error Handling Stuff */
+		if (src == dest) {
+			$('#path .text-muted').text("Same source and destination found");
+			return;
+		}
 		this.mainService.getPath(src, dest)
 		.subscribe(res => {
 			if (res.error) {
