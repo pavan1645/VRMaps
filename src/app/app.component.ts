@@ -10,6 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
+let viewer: any, pano, path=[], allMarkers=[], id="pano1";
 
 @Component({
 	selector: 'app-root',
@@ -17,12 +18,6 @@ declare var $: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-	private addMarkers: Function;
-	private  viewer: any;
-	public id : string = "pano1";
-	public pano: any;
-	public path: any = [];
-	public allMarkers: any = [];
 	public model: any;
 	public srcModel: any = { image_id: "pano1", tooltip_content: "615 front door" };
 	public destModel: any;
@@ -31,7 +26,7 @@ export class AppComponent implements OnInit {
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
-		let viewer = PhotoSphereViewer({
+		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
 			panorama: './assets/images/pano1.jpg',
 			time_anim: false,
@@ -49,12 +44,10 @@ export class AppComponent implements OnInit {
 			gyroscope: true
 		});
 		
-		this.viewer = viewer;
-		let pano = new Pano(this.mainService, this.viewer);
-		this.pano = pano;
+		pano = new Pano(this.mainService, viewer);
 		
 		viewer.once('panorama-loaded', () => {
-			pano.load(this.id);
+			pano.load(id);
 		});
 		
 		viewer.on('dblclick', (e) => {
@@ -63,10 +56,12 @@ export class AppComponent implements OnInit {
 		});
 		
 		viewer.on('select-marker', (marker) => {
-			this.id=marker.id;
-			if (this.path.length > 0 && this.id == this.path[this.path.length - 1]) this.setText("path", "Destination Reached", 1); 
+			id=marker.id;
+			this.setText("pano", "", 0); 											/* Remove pano helper text */
+			/* Path helper text */
+			if (path.length > 0 && id == path[path.length - 1]) this.setText("path", "Destination Reached", 1); 
 			else this.setText("path", "", 0); 
-			this.setSourceModel(this.id);
+			this.setSourceModel(id);
 			pano.load(marker.id)
 			.then(() => {
 				this.colorMarkers();
@@ -75,18 +70,19 @@ export class AppComponent implements OnInit {
 		
 		this.mainService.getAllMarkers()
 		.subscribe((res) => {
-			this.allMarkers = res; 
+			allMarkers = res; 
 		});
 	}
 	
 	viewPano(){
+		this.setText("path","",0);											/* Remove path helper text */
 		/* Error Handling Stuff */
 		if (!this.model) { this.setText("pano","Enter location first", -1); return; }
 		if (!this.model.image_id) { this.setText("pano","Wrong input, please select from suggestions list", -1); return; }
-		this.pano.load(this.model.image_id)
+		pano.load(this.model.image_id)
 		.then(() => {
-			this.id = this.model.image_id;
-			this.setSourceModel(this.id);
+			id = this.model.image_id;
+			this.setSourceModel(id);
 			this.colorMarkers();
 			this.setText("pano","Location Loaded!", 1);
 		});
@@ -98,10 +94,10 @@ export class AppComponent implements OnInit {
 			latitude: $("#m2p #lat").val(),
 			longitude: $("#m2p #long").val()
 		};
-		this.mainService.addMarkerToPano(this.id, newMarker)
+		this.mainService.addMarkerToPano(id, newMarker)
 		.subscribe((res) => {
 			console.log(res);
-			this.pano.load(this.id);
+			pano.load(id);
 		});
 	}
 	
@@ -123,10 +119,11 @@ export class AppComponent implements OnInit {
 	}
 	
 	getPath(){
+		this.setText("pano", "", 0);											/* Remove pano helper text */
 		/* Error Handling Stuff */
 		if (!this.srcModel || !this.destModel) { this.setText("path", "Enter source and destination", -1); return; }
 		if (!this.srcModel.image_id || !this.destModel.image_id) { this.setText("path", "Wrong input, please select from suggestions list", -1); return; }
-
+		
 		let src = this.srcModel.image_id;
 		let dest = this.destModel.image_id;
 		/* Error Handling Stuff */
@@ -135,9 +132,9 @@ export class AppComponent implements OnInit {
 		.subscribe(res => {
 			if (res.error) { this.setText("path", res.error, -1); return; }
 			else this.setText("path", res, 1);
-			this.path = res;
+			path = res;
 			//reset previous colors and add load again
-			this.pano.load(this.id)
+			pano.load(id)
 			.then(() => {
 				this.colorMarkers();
 			});
@@ -145,33 +142,33 @@ export class AppComponent implements OnInit {
 	}
 	
 	clearPath(){
-		this.path = [];
-		this.pano.load(this.id);
+		path = [];
+		pano.load(id);
 		this.setText("path", "", 0);
 	}
 	
 	colorMarkers(){
-		let currMarkers = this.pano.pano.markers;
+		let currMarkers = pano.pano.markers;
 		let currMarker;
 		currMarkers.forEach(marker => {
-			if (this.path.indexOf(marker.info.image_id) > -1 && this.path.length > 0) {
-				if(this.id != marker.info.image_id) {
-					currMarker  = this.viewer.getMarker(marker.info.image_id);
+			if (path.indexOf(marker.info.image_id) > -1 && path.length > 0) {
+				if(id != marker.info.image_id) {
+					currMarker  = viewer.getMarker(marker.info.image_id);
 					currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}})
 				}
 			}
 		});
 		//rotating camera to path next
-		let index = this.path.indexOf(this.id);
-		for (var i = index; i < this.path.length; i++) {
-			currMarker = this.path[i];
+		let index = path.indexOf(id);
+		for (var i = index; i < path.length; i++) {
+			currMarker = path[i];
 			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {
-				this.viewer.gotoMarker(currMarker, 1000);
+				viewer.gotoMarker(currMarker, 1000);
 				break;
 			}
 		}
 	}
-
+	
 	setText(type: string, msg: string, status:any){
 		if (type == "path") {
 			$('#path #text-utility').text(msg);
@@ -190,13 +187,13 @@ export class AppComponent implements OnInit {
 		}
 	}
 	
-	setSourceModel = (id: string) => this.srcModel = this.allMarkers.find(o => o.image_id === id);
-
+	setSourceModel = (id: string) => this.srcModel = allMarkers.find(o => o.image_id === id);
+	
 	search = (text$: Observable<string>) => {
 		return text$
 		.debounceTime(200)
 		.map(term => term === '' ? []
-		: this.allMarkers.filter(v => v.tooltip_content.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
+		: allMarkers.filter(v => v.tooltip_content.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10));
 	}
 	
 	formatter = (x: { tooltip_content: string }) => x.tooltip_content;
