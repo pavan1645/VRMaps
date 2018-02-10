@@ -115,11 +115,20 @@ export class AppComponent implements OnInit {
 	}
 	
 	getPath(){
+		//error handling
+		if (!this.srcModel || !this.destModel || !this.srcModel.image_id || !this.destModel.image_id) {
+			$('#path .text-muted').text("Wrong input");
+			return;
+		}
+		//if () { $('#path .text-muted').text("Wrong input"); return};
 		let src = this.srcModel.image_id;
 		let dest = this.destModel.image_id;
 		this.mainService.getPath(src, dest)
 		.subscribe(res => {
-			if (res.error) $('#path .text-muted').text(res.error);
+			if (res.error) {
+				$('#path .text-muted').text(res.error);
+				return;
+			}
 			else $('#path .text-muted').text(res);
 			this.path = res;
 			//reset previous colors and add load again
