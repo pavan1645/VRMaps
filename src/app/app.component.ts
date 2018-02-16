@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { MainService } from './main.service';
 import { Pano } from './pano';
 //import * from 'jquery';
@@ -17,13 +17,13 @@ let viewer: any, pano, path=[], allMarkers=[], id="pano1";
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 	public model: any;
 	public srcModel: any = { image_id: "pano1", tooltip_content: "615 front door" };
 	public destModel: any;
 	public panoClass: string = "text-secondary";
 	public pathClass: string = "text-secondary";
-	constructor(private mainService: MainService) { }
+	constructor(private mainService: MainService, private elementRef: ElementRef) { }
 	
 	ngOnInit() {
 		viewer = PhotoSphereViewer({
@@ -40,13 +40,22 @@ export class AppComponent implements OnInit {
 				'zoom',
 				'markers',
 				'caption',
-				'fullscreen'		
+				'fullscreen',
+				{
+					id: 'menu',
+					title: 'Menu',
+					className: 'menuBtn',
+					content: '<i class="fa fa-bars fa-lg" id="menu"></i>'
+				}	
 			],
 			gyroscope: true
 		});
 		
 		pano = new Pano(this.mainService, viewer);
 		
+		//viewer.getNavbarButton("menu").addEventListener('click', this.togglePanel());
+		
+
 		viewer.once('panorama-loaded', () => {
 			pano.load(id);
 		});
@@ -73,6 +82,11 @@ export class AppComponent implements OnInit {
 		.subscribe((res) => {
 			allMarkers = res; 
 		});
+	}
+
+	ngAfterViewInit(){
+		this.elementRef.nativeElement.querySelector('#menu')
+			.addEventListener('click', this.togglePanel.bind(this));
 	}
 	
 	viewPano(){
@@ -148,6 +162,12 @@ export class AppComponent implements OnInit {
 		this.setText("path", "", 0);
 	}
 	
+	togglePanel(){
+		console.log("Pannel toggle");
+		
+	}
+
+	/* utilities */
 	colorMarkers(){
 		let currMarkers = pano.pano.markers;
 		let currMarker;
