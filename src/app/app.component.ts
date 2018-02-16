@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
-let viewer: any, pano, path=[], allMarkers=[], id="pano1";
+let viewer: any, pano, path=[], allMarkers=[], id="pano1", panelOpen: boolean=false;
 
 @Component({
 	selector: 'app-root',
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		
 		//viewer.getNavbarButton("menu").addEventListener('click', this.togglePanel());
 		
-
+		
 		viewer.once('panorama-loaded', () => {
 			pano.load(id);
 		});
@@ -83,10 +83,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 			allMarkers = res; 
 		});
 	}
-
+	
 	ngAfterViewInit(){
 		this.elementRef.nativeElement.querySelector('#menu')
-			.addEventListener('click', this.togglePanel.bind(this));
+		.addEventListener('click', this.togglePanel.bind(this));
+		this.togglePanel();
 	}
 	
 	viewPano(){
@@ -163,10 +164,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 	
 	togglePanel(){
-		console.log("Pannel toggle");
-		
+		if(!panelOpen) viewer.showPanel($("#menuContent").html());
+		else viewer.hidePanel();
+		panelOpen = !panelOpen;
 	}
-
+	
 	/* utilities */
 	colorMarkers(){
 		let currMarkers = pano.pano.markers;
@@ -211,6 +213,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 	setSourceModel = (id: string) => this.srcModel = allMarkers.find(o => o.image_id === id);
 	
 	search = (text$: Observable<string>) => {
+		console.log("searching");
+		
 		return text$
 		.debounceTime(200)
 		.map(term => term === '' ? []
