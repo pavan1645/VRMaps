@@ -23,9 +23,11 @@ export class AppComponent implements OnInit {
 	public destModel: any;
 	public panoClass: string = "text-secondary";
 	public pathClass: string = "text-secondary";
+	public addToGraph: string;
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
+		this.addToGraph = "true";
 		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
 			panorama: './assets/images/pano1.jpg',
@@ -92,7 +94,8 @@ export class AppComponent implements OnInit {
 		let newMarker = {
 			image_id: $("#m2p #image_id").val(),
 			latitude: $("#m2p #lat").val(),
-			longitude: $("#m2p #long").val()
+			longitude: $("#m2p #long").val(),
+			addToGraph: this.addToGraph
 		};
 		this.mainService.addMarkerToPano(id, newMarker)
 		.subscribe((res) => {

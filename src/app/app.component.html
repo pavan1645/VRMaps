@@ -38,6 +38,13 @@
 			<div class="col-md-6 border border-dark" id="m2p">
 				<h2>Add marker to pano</h2>
 				<div class="text-left">
+					<div class="form-check">
+						Add to Graph?: 
+						<input name="addToGraph" id="radioTrue" type="radio" value="true" [(ngModel)]="addToGraph">
+						<label class="pr-2" for="radioTrue">Yes</label>
+						<input name="addToGraph" id="radioFalse" type="radio" value="false" [(ngModel)]="addToGraph">
+						<label for="radioFalse">No</label>
+					</div>
 					Image ID:
 					<input class="m-2" type="text" placeholder="Image ID" id="image_id" />
 					<br> Latitude:
