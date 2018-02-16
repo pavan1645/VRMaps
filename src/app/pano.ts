@@ -19,7 +19,7 @@ export class Pano {
 							latitude: marker.latitude,
 							longitude: marker.longitude,
 							svgStyle: {
-								fill: 'rgba(250, 0, 0, 0.3)'
+								fill: 'rgba(250, 250, 250, 0.8)'
 							},
 							tooltip: {
 								content: marker.info.tooltip_content,

@@ -15,6 +15,8 @@ var pathRoutes = require('./routes/path');
 
 var seedDB = require("./seeds");
 
+const PORT = process.env.PORT || 3000;
+
 var app = express();
 seedDB();
 
@@ -47,6 +49,6 @@ app.use('/api/', markerRoutes);
 app.use('/api/', panoRoutes);
 app.use('/api/', pathRoutes);
 
-app.listen(process.env.PORT || 3000, function() {
-	console.log("Serving on port 3000");
+app.listen(PORT, function() {
+console.log("Serving on port "+PORT);
 });
