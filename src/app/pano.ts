@@ -12,6 +12,11 @@ export class Pano {
 				if (res[0].hasOwnProperty('markers')) {
 					let markers = res[0].markers;
 					markers.forEach(marker => {
+						var tt = null;
+						if (marker.info.tooltip_content) tt = {
+							content: marker.info.tooltip_content,
+							position: 'top center'
+						}
 						viewer.addMarker({
 							id: marker.info.image_id,
 							circle: 20,
@@ -21,10 +26,7 @@ export class Pano {
 							svgStyle: {
 								fill: 'rgba(250, 0, 0, 0.3)'
 							},
-							tooltip: {
-								content: marker.info.tooltip_content,
-								position: 'top center'
-							}
+							tooltip: tt
 						})
 					});
 				}
