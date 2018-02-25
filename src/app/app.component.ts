@@ -147,11 +147,15 @@ export class AppComponent implements OnInit {
 	
 	clearPath(){
 		path = [];
+		i=0;
 		pano.load(id);
 		this.setText("path", "", 0);
 	}
-	
-	autoplay(){
+
+	/* Main method for autoplay */
+	autoplay(){i=0; this.autoplayRec();}
+	/* Recursive method */
+	autoplayRec(){
 		let nextMarker = path[++i];
 		if(path.length>0){
 			pano.load(nextMarker)
@@ -162,7 +166,7 @@ export class AppComponent implements OnInit {
 				this.colorMarkers(); 
 				if(i<path.length-1) {
 					this.wait(2000)
-					.then(() => this.autoplay());
+					.then(() => this.autoplayRec());
 				}
 			});
 		}
