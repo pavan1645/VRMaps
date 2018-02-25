@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
-let viewer: any, pano, path=[], allMarkers=[], id="pano1";
+let viewer: any, pano, path=[], allMarkers=[], id="pano1", i=0;
 
 @Component({
 	selector: 'app-root',
@@ -43,9 +43,10 @@ export class AppComponent implements OnInit {
 				'caption',
 				'fullscreen'		
 			],
-			gyroscope: true
+			gyroscope: true,
+			mousewheel: false
 		});
-		
+		viewer.zoom(15);
 		pano = new Pano(this.mainService, viewer);
 		
 		viewer.once('panorama-loaded', () => {
@@ -150,6 +151,24 @@ export class AppComponent implements OnInit {
 		this.setText("path", "", 0);
 	}
 	
+	autoplay(){
+		let nextMarker = path[++i];
+		if(path.length>0){
+			pano.load(nextMarker)
+			.then(() => {
+				id = nextMarker;
+				if (path.length > 0 && id == path[path.length - 1]) this.setText("path", "Destination Reached", 1); 
+				this.setSourceModel(id);
+				this.colorMarkers(); 
+				if(i<path.length-1) {
+					this.wait(2000)
+					.then(() => this.autoplay());
+				}
+			});
+		}
+		else this.setText("path","No path selected",-1)
+	}
+	
 	colorMarkers(){
 		let currMarkers = pano.pano.markers;
 		let currMarker;
@@ -166,7 +185,7 @@ export class AppComponent implements OnInit {
 		for (var i = index; i < path.length; i++) {
 			currMarker = path[i];
 			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {
-				viewer.gotoMarker(currMarker, 1000);
+				viewer.gotoMarker(currMarker, 500);
 				break;
 			}
 		}
@@ -200,4 +219,12 @@ export class AppComponent implements OnInit {
 	}
 	
 	formatter = (x: { tooltip_content: string }) => x.tooltip_content;
+
+	wait(time){
+		return new Promise((resolve) => {
+			setTimeout(function() {
+				resolve();
+			}, time);
+		})
+	}
 }
