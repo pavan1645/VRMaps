@@ -21,7 +21,9 @@ var app = express();
 seedDB();
 
 //Connect MongoDB
-mongoose.connect("mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps", {
+var mongoURL = "mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps";
+//var mongoURL = "mongodb://localhost/vrmaps"
+mongoose.connect(mongoURL, {
 	useMongoClient: true
 });
 mongoose.Promise = q.Promise;
@@ -31,7 +33,7 @@ mongoose.connection.on('connected',(err) => {
 	console.log("connected to db");
 });
 mongoose.connection.on('error', (err) => {
-	if(err){ console.log("err"); }	
+	if(err){ console.log("err: "+err); }	
 });
 
 /*Body and Files Config*/

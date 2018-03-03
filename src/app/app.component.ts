@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
-let viewer: any, pano, path=[], allMarkers=[], id="pano1", panelOpen: boolean=false;
+let viewer: any, pano, path=[], allMarkers=[], id="pano1", panelOpen: boolean=false, i=0;
 
 @Component({
 	selector: 'app-root',
@@ -24,8 +24,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 	public panoClass: string = "text-secondary";
 	public pathClass: string = "text-secondary";
 	constructor(private mainService: MainService, private elementRef: ElementRef) { }
+	public addToGraph: string;
 	
 	ngOnInit() {
+		this.addToGraph = "true";
 		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
 			panorama: './assets/images/pano1.jpg',
@@ -48,9 +50,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 					content: '<i class="fa fa-bars fa-lg" id="menu"></i>'
 				}	
 			],
-			gyroscope: true
+			gyroscope: true,
+			mousewheel: false
 		});
-		
+		viewer.zoom(15);
 		pano = new Pano(this.mainService, viewer);
 		
 		//viewer.getNavbarButton("menu").addEventListener('click', this.togglePanel());
@@ -108,7 +111,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 		let newMarker = {
 			image_id: $("#m2p #image_id").val(),
 			latitude: $("#m2p #lat").val(),
-			longitude: $("#m2p #long").val()
+			longitude: $("#m2p #long").val(),
+			addToGraph: this.addToGraph
 		};
 		this.mainService.addMarkerToPano(id, newMarker)
 		.subscribe((res) => {
@@ -159,8 +163,30 @@ export class AppComponent implements OnInit, AfterViewInit {
 	
 	clearPath(){
 		path = [];
+		i=0;
 		pano.load(id);
 		this.setText("path", "", 0);
+	}
+
+	/* Main method for autoplay */
+	autoplay(){i=0; this.autoplayRec();}
+	/* Recursive method */
+	autoplayRec(){
+		let nextMarker = path[++i];
+		if(path.length>0){
+			pano.load(nextMarker)
+			.then(() => {
+				id = nextMarker;
+				if (path.length > 0 && id == path[path.length - 1]) this.setText("path", "Destination Reached", 1); 
+				this.setSourceModel(id);
+				this.colorMarkers(); 
+				if(i<path.length-1) {
+					this.wait(2000)
+					.then(() => this.autoplayRec());
+				}
+			});
+		}
+		else this.setText("path","No path selected",-1)
 	}
 	
 	togglePanel(){
@@ -186,7 +212,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 		for (var i = index; i < path.length; i++) {
 			currMarker = path[i];
 			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {
-				viewer.gotoMarker(currMarker, 1000);
+				viewer.gotoMarker(currMarker, 500);
 				break;
 			}
 		}
@@ -222,4 +248,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 	
 	formatter = (x: { tooltip_content: string }) => x.tooltip_content;
+
+	wait(time){
+		return new Promise((resolve) => {
+			setTimeout(function() {
+				resolve();
+			}, time);
+		})
+	}
 }
