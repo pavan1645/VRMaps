@@ -1,7 +1,46 @@
 <div  style="margin: 10px auto; text-align: center;">
 	<h1>VR Maps</h1>
-	<div id="psv" style="width: 80%; margin: 0px auto">
-		
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="border border-dark px-1" id="m2p">
+					<h2>Add marker to pano</h2>
+					<div class="text-left">
+						<div class="form-check">
+							Add to Graph?:
+							<input name="addToGraph" id="radioTrue" type="radio" value="true" [(ngModel)]="addToGraph">
+							<label class="pr-2" for="radioTrue">Yes</label>
+							<input name="addToGraph" id="radioFalse" type="radio" value="false" [(ngModel)]="addToGraph">
+							<label for="radioFalse">No</label>
+						</div>
+						Image ID:
+						<input class="m-2" type="text" placeholder="Image ID" id="image_id" />
+						<br> Latitude:
+						<input class="m-2" type="text" placeholder="" id="lat" />
+						<br> Longitude:
+						<input class="m-2" type="text" placeholder="" id="long" />
+						<br>
+						<button class="my-2 btn" (click)='addMarkerToPano()'>Add to Pano</button>
+						<div class=" text-muted"></div>
+					</div>
+				</div>
+				<div class="border border-dark px-1" id="m2db">
+					<h2>Add marker</h2>
+					<div class="text-left">
+						Marker ID:
+						<input class="m-2" type="text" placeholder="Marker ID" id="image_id" value="pano1" />
+						<br> Tooltip Content:
+						<input class="m-2" type="text" placeholder="Tooltip content" id="tooltip" value="615 front door" />
+						<br>
+						<button class="my-2 btn" (click)='addMarker()'>Add to DB</button>
+						<div class=" text-muted"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-9">
+				<div id="psv" ></div>
+			</div>
+		</div>
 	</div>
 	<br>
 	<div class="container">
@@ -32,41 +71,6 @@
 					<br> 
 					<button class="btn mb-1" (click)="viewPano()">View Pano</button>
 					<p id="text-utility" [class]="panoClass"></p>
-				</div>
-			</div>
-		</div>
-		<div class="row my-3">
-			<div class="col-md-6 border border-dark" id="m2p">
-				<h2>Add marker to pano</h2>
-				<div class="text-left">
-					<div class="form-check">
-						Add to Graph?: 
-						<input name="addToGraph" id="radioTrue" type="radio" value="true" [(ngModel)]="addToGraph">
-						<label class="pr-2" for="radioTrue">Yes</label>
-						<input name="addToGraph" id="radioFalse" type="radio" value="false" [(ngModel)]="addToGraph">
-						<label for="radioFalse">No</label>
-					</div>
-					Image ID:
-					<input class="m-2" type="text" placeholder="Image ID" id="image_id" />
-					<br> Latitude:
-					<input class="m-2" type="text" placeholder="" id="lat" />
-					<br> Longitude:
-					<input class="m-2" type="text" placeholder="" id="long" />
-					<br>
-					<button class="my-2 btn" (click)='addMarkerToPano()'>Add to Pano</button>
-					<div class=" text-muted"></div>
-				</div>
-			</div>
-			<div class="col-md-6 border border-dark" id="m2db">
-				<h2>Add marker</h2>
-				<div class="text-left">
-					Marker ID:
-					<input class="m-2" type="text" placeholder="Marker ID" id="image_id" value="pano1"/>
-					<br> Tooltip Content:
-					<input class="m-2" type="text" placeholder="Tooltip content" id="tooltip" value="615 front door"/>
-					<br>
-					<button class="my-2 btn" (click)='addMarker()'>Add to DB</button>
-					<div class=" text-muted"></div>
 				</div>
 			</div>
 		</div>
