@@ -42,5 +42,5 @@ testem.log
 Thumbs.db
 
 
-#All Raw Photos
-/photos
+#Database dumps, photos and pdfs
+/junk

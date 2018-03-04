@@ -28,5 +28,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 
 ## Database dump
-Run `mongodump -d vrmaps -o dbdump` to dump into database files
-Run `mongorestore -d vrmaps dbdump/vrmaps/` to restore database files
+Run `mongodump -d vrmaps -o <floor_no>` to dump into database files
+Run `mongorestore -d vrmaps <floor_no>/vrmaps/` to restore database files
+Run `db.<collection_name>.update({<field_name>:<field_value>},{$set: {<field_name>:<new_value>}})` to update and set a specific field

@@ -16,7 +16,6 @@ var pathRoutes = require('./routes/path');
 var seedDB = require("./seeds");
 
 var app = express();
-seedDB();
 
 //Connect MongoDB
 mongoose.connect("mongodb://localhost/vrmaps", {
@@ -46,6 +45,8 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/api/', markerRoutes);
 app.use('/api/', panoRoutes);
 app.use('/api/', pathRoutes);
+
+seedDB();
 
 app.listen(3000, function() {
 	console.log("Serving on port 3000");
