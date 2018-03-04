@@ -14,6 +14,7 @@ export class Pano {
 						let markers = res[0].markers;
 						markers.forEach(marker => {
 							var markerUrl = "./assets/images/" + marker.info.image_id + ".jpg";
+							/* Caching nearby panos */
 							if (!viewer.getPanoramaCache(markerUrl)){
 								viewer.preloadPanorama(markerUrl);
 							}
