@@ -96,12 +96,14 @@ router.post("/pano/:id/marker", (req, res) => {
 				pano.populate("markers.info").execPopulate()
 				.then((pano) => {
 					console.log("Pano saved: \n" + pano);
-					Graph.addNode(req.params.id, req.body.image_id);
-					var buffer = "graphObj.addNode(\""+req.params.id+"\", \""+req.body.image_id+"\");\n";
-					fs.appendFile("path.txt",buffer, (err) => {
-						if(err) console.log(err);
-						else console.log("Appended to file");
-					})
+					if (req.body.addToGraph == "true") {
+						Graph.addNode(req.params.id, req.body.image_id);
+						var buffer = "graphObj.addNode(\""+req.params.id+"\", \""+req.body.image_id+"\");\n";
+						fs.appendFile("path.txt",buffer, (err) => {
+							if(err) console.log(err);
+							else console.log("Appended to file");
+						})
+					}
 					res.send(pano)
 				})
 			});
@@ -113,19 +115,3 @@ router.post("/pano/:id/marker", (req, res) => {
 
 
 module.exports = router;
-
-
-
-/*For adding/updating whole pano--- FOR DEV*/
-//Pano.marker.info stores _id not image id.. Update the same!
-/* router.post("/pano/:id", (req, res) => {
-	Pano.find({ "id": req.params.id }).exec()
-	.then((pano) => {
-		pano[0].id = req.params.id;
-		pano[0].markers = req.body.markers;
-		pano[0].save()
-		.then((x) => {
-			res.send(x);
-		});
-	});
-}); */

@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
-let viewer: any, pano, path=[], allMarkers=[], id="pano1";
+let viewer: any, pano, path=[], allMarkers=[], id="0055", i=0;
 
 @Component({
 	selector: 'app-root',
@@ -19,16 +19,18 @@ let viewer: any, pano, path=[], allMarkers=[], id="pano1";
 })
 export class AppComponent implements OnInit {
 	public model: any;
-	public srcModel: any = { image_id: "pano1", tooltip_content: "615 front door" };
+	public srcModel: any = { image_id: "0055", tooltip_content: "615 front door" };
 	public destModel: any;
 	public panoClass: string = "text-secondary";
 	public pathClass: string = "text-secondary";
+	public addToGraph: string;
 	constructor(private mainService: MainService) { }
 	
 	ngOnInit() {
+		this.addToGraph = "true";
 		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
-			panorama: './assets/images/pano1.jpg',
+			panorama: './assets/images/0055.jpg',
 			time_anim: false,
 			caption: "<strong>VR Maps</strong>",
 			size: {
@@ -42,9 +44,10 @@ export class AppComponent implements OnInit {
 				'caption',
 				'fullscreen'		
 			],
-			gyroscope: true
+			gyroscope: true,
+			mousewheel: false
 		});
-		
+		viewer.zoom(15);
 		pano = new Pano(this.mainService, viewer);
 		
 		viewer.once('panorama-loaded', () => {
@@ -93,7 +96,8 @@ export class AppComponent implements OnInit {
 		let newMarker = {
 			image_id: $("#m2p #image_id").val(),
 			latitude: $("#m2p #lat").val(),
-			longitude: $("#m2p #long").val()
+			longitude: $("#m2p #long").val(),
+			addToGraph: this.addToGraph
 		};
 		this.mainService.addMarkerToPano(id, newMarker)
 		.subscribe((res) => {
@@ -144,8 +148,30 @@ export class AppComponent implements OnInit {
 	
 	clearPath(){
 		path = [];
+		i=0;
 		pano.load(id);
 		this.setText("path", "", 0);
+	}
+
+	/* Main method for autoplay */
+	autoplay(){i=0; this.autoplayRec();}
+	/* Recursive method */
+	autoplayRec(){
+		let nextMarker = path[++i];
+		if(path.length>0){
+			pano.load(nextMarker)
+			.then(() => {
+				id = nextMarker;
+				if (path.length > 0 && id == path[path.length - 1]) this.setText("path", "Destination Reached", 1); 
+				this.setSourceModel(id);
+				this.colorMarkers(); 
+				if(i<path.length-1) {
+					this.wait(5000)
+					.then(() => this.autoplayRec());
+				}
+			});
+		}
+		else this.setText("path","No path selected",-1)
 	}
 	
 	colorMarkers(){
@@ -198,4 +224,12 @@ export class AppComponent implements OnInit {
 	}
 	
 	formatter = (x: { tooltip_content: string }) => x.tooltip_content;
+
+	wait(time){
+		return new Promise((resolve) => {
+			setTimeout(function() {
+				resolve();
+			}, time);
+		})
+	}
 }
