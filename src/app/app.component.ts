@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
-let viewer: any, pano, path=[], allMarkers=[], id="pano1", i=0;
+let viewer: any, pano, path=[], allMarkers=[], id="0055", i=0;
 
 @Component({
 	selector: 'app-root',
@@ -19,7 +19,7 @@ let viewer: any, pano, path=[], allMarkers=[], id="pano1", i=0;
 })
 export class AppComponent implements OnInit {
 	public model: any;
-	public srcModel: any = { image_id: "pano1", tooltip_content: "615 front door" };
+	public srcModel: any = { image_id: "0055", tooltip_content: "615 front door" };
 	public destModel: any;
 	public panoClass: string = "text-secondary";
 	public pathClass: string = "text-secondary";
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 		this.addToGraph = "true";
 		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
-			panorama: './assets/images/pano1.jpg',
+			panorama: './assets/images/0055.jpg',
 			time_anim: false,
 			caption: "<strong>VR Maps</strong>",
 			size: {
@@ -166,7 +166,7 @@ export class AppComponent implements OnInit {
 				this.setSourceModel(id);
 				this.colorMarkers(); 
 				if(i<path.length-1) {
-					this.wait(2000)
+					this.wait(5000)
 					.then(() => this.autoplayRec());
 				}
 			});
@@ -190,7 +190,7 @@ export class AppComponent implements OnInit {
 		for (var i = index; i < path.length; i++) {
 			currMarker = path[i];
 			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {
-				viewer.gotoMarker(currMarker, 500);
+				viewer.gotoMarker(currMarker, 1000);
 				break;
 			}
 		}
