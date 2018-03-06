@@ -19,8 +19,8 @@ var app = express();
 seedDB();
 
 //Connect MongoDB
-//var mongoURL = "mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps";
-var mongoURL = "mongodb://localhost/vrmaps"
+var mongoURL = "mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps";
+//var mongoURL = "mongodb://localhost/vrmaps"
 mongoose.connect(mongoURL, {
 	useMongoClient: true
 });
