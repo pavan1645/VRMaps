@@ -44,3 +44,4 @@ Thumbs.db
 
 #Database dumps, photos and pdfs
 /junk
+/src/assets/images
