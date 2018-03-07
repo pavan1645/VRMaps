@@ -152,7 +152,7 @@ export class AppComponent implements OnInit {
 		pano.load(id);
 		this.setText("path", "", 0);
 	}
-
+	
 	/* Main method for autoplay */
 	autoplay(){i=0; this.autoplayRec();}
 	/* Recursive method */
@@ -166,7 +166,12 @@ export class AppComponent implements OnInit {
 				this.setSourceModel(id);
 				this.colorMarkers(); 
 				if(i<path.length-1) {
-					this.wait(5000)
+					/* Caching next pano */
+					var markerUrl = "./assets/images/" + path[i+1] + ".jpg";
+					if (!viewer.getPanoramaCache(markerUrl)) {
+						viewer.preloadPanorama(markerUrl);
+					}
+					this.wait(2000)
 					.then(() => this.autoplayRec());
 				}
 			});
@@ -224,7 +229,7 @@ export class AppComponent implements OnInit {
 	}
 	
 	formatter = (x: { tooltip_content: string }) => x.tooltip_content;
-
+	
 	wait(time){
 		return new Promise((resolve) => {
 			setTimeout(function() {

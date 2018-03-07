@@ -228,7 +228,6 @@ function seedDB() {
 	graphObj.addNode("0088", "0089");
 	graphObj.addNode("0089", "0088");
 	graphObj.addNode("0089", "0090");
-	graphObj.addNode("0089", "0102");
 	graphObj.addNode("0102", "0100");
 	graphObj.addNode("0100", "0090");
 	graphObj.addNode("0090", "0089");
@@ -324,12 +323,6 @@ function seedDB() {
 	graphObj.addNode("0123", "0122");
 	graphObj.addNode("0122", "0123");
 	graphObj.addNode("0122", "0087");
-
-
-
-
-
-
 
 	graphObj.addNode("0121", "0158");
 	graphObj.addNode("0158", "0121");

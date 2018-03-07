@@ -5,14 +5,19 @@ export class Pano {
 	public load(id) {
 		return new Promise((resolve) => {
 			let viewer = this.viewer;
-			viewer.clearMarkers();
 			this.mainService.getPano(id)
 			.subscribe(res => {
+				viewer.clearMarkers();
 				viewer.setPanorama("./assets/images/" + id + ".jpg")
-				.then(() => {
+				.then((pano) => {
 					if (res[0].hasOwnProperty('markers')) {
 						let markers = res[0].markers;
 						markers.forEach(marker => {
+							var markerUrl = "./assets/images/" + marker.info.image_id + ".jpg";
+							/* Caching nearby panos */
+							if (!viewer.getPanoramaCache(markerUrl)){
+								viewer.preloadPanorama(markerUrl);
+							}
 							var tt = null;
 							if (marker.info.tooltip_content) tt = {
 								content: marker.info.tooltip_content,
