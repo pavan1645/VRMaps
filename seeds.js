@@ -325,12 +325,6 @@ function seedDB() {
 	graphObj.addNode("0122", "0123");
 	graphObj.addNode("0122", "0087");
 
-
-
-
-
-
-
 	graphObj.addNode("0121", "0158");
 	graphObj.addNode("0158", "0121");
 	graphObj.addNode("0158", "0159");
