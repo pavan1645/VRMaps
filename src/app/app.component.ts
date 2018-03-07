@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var PhotoSphereViewer: any;
 declare var $: any;
-let viewer: any, pano, path=[], allMarkers=[], id="0055", i=0;
+let viewer: any, pano, path = [], allMarkers = [], id ="0228", i=0;
 
 @Component({
 	selector: 'app-root',
@@ -19,7 +19,7 @@ let viewer: any, pano, path=[], allMarkers=[], id="0055", i=0;
 })
 export class AppComponent implements OnInit {
 	public model: any;
-	public srcModel: any = { image_id: "0055", tooltip_content: "615 front door" };
+	public srcModel: any = { image_id: "0228", tooltip_content: "Glassdoors Interior" };
 	public destModel: any;
 	public panoClass: string = "text-secondary";
 	public pathClass: string = "text-secondary";
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 		this.addToGraph = "true";
 		viewer = PhotoSphereViewer({
 			container: document.getElementById('psv'),
-			panorama: './assets/images/0055.jpg',
+			panorama: './assets/images/0228.jpg',
 			time_anim: false,
 			caption: "<strong>VR Maps</strong>",
 			size: {
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
 		});
 		
 		viewer.on('dblclick', (e) => {
+			//console.log("Latitude: "+e.latitude +" Longitude: "+ e.longitude);
 			$("#m2p #lat").val(e.latitude);
 			$("#m2p #long").val(e.longitude);
 		});
@@ -171,7 +172,7 @@ export class AppComponent implements OnInit {
 					if (!viewer.getPanoramaCache(markerUrl)) {
 						viewer.preloadPanorama(markerUrl);
 					}
-					this.wait(2000)
+					this.wait(5000)
 					.then(() => this.autoplayRec());
 				}
 			});
@@ -192,10 +193,22 @@ export class AppComponent implements OnInit {
 		});
 		//rotating camera to path next
 		let index = path.indexOf(id);
+		if (index > 0) viewer.gotoMarker(path[index-1], 0);
 		for (var i = index; i < path.length; i++) {
-			currMarker = path[i];
+			currMarker = path[i];				
 			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {
-				viewer.gotoMarker(currMarker, 1000);
+				//Remove, Add and Set camera to next marker
+				var nextMarker = viewer.getMarker(currMarker);
+				viewer.removeMarker(nextMarker, true);		
+				viewer.addMarker({
+					id: nextMarker.id,
+					image: '/assets/images/blink.gif',
+					width: 40,
+					height: 40,
+					latitude: nextMarker.latitude,
+					longitude: nextMarker.longitude+0.05
+				});
+				viewer.gotoMarker(nextMarker, 2000);
 				break;
 			}
 		}
