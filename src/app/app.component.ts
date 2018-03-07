@@ -171,7 +171,7 @@ export class AppComponent implements OnInit {
 					if (!viewer.getPanoramaCache(markerUrl)) {
 						viewer.preloadPanorama(markerUrl);
 					}
-					this.wait(2000)
+					this.wait(5000)
 					.then(() => this.autoplayRec());
 				}
 			});
