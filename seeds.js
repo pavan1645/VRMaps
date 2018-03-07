@@ -1,6 +1,4 @@
 var graphObj = require('./graph');
-var fs = require("fs");
-var addmarker = require('./addmarker');
 
 function seedDB() {
 	graphObj.addNode("0055", "0056");
