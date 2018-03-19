@@ -45,13 +45,18 @@ export class AppComponent implements OnInit {
 				'fullscreen'		
 			],
 			gyroscope: true,
-			mousewheel: false
+			mousewheel: false,
+			transition: {
+				duration: 2000, // duration of transition in milliseconds
+				loader: false // should display the loader ?
+			}
 		});
 		viewer.zoom(15);
 		pano = new Pano(this.mainService, viewer);
 		
 		viewer.once('panorama-loaded', () => {
 			pano.load(id);
+			
 		});
 		
 		viewer.on('dblclick', (e) => {
@@ -160,7 +165,7 @@ export class AppComponent implements OnInit {
 	autoplayRec(){
 		let nextMarker = path[++i];
 		if(path.length>0){
-			pano.load(nextMarker)
+			pano.load(nextMarker, true, path[i-1])
 			.then(() => {
 				id = nextMarker;
 				if (path.length > 0 && id == path[path.length - 1]) this.setText("path", "Destination Reached", 1); 
@@ -169,9 +174,9 @@ export class AppComponent implements OnInit {
 				if(i<path.length-1) {
 					/* Caching next pano */
 					var markerUrl = "./assets/images/" + path[i+1] + ".jpg";
-					if (!viewer.getPanoramaCache(markerUrl)) {
+					/* if (!viewer.getPanoramaCache(markerUrl)) {
 						viewer.preloadPanorama(markerUrl);
-					}
+					} */
 					this.wait(5000)
 					.then(() => this.autoplayRec());
 				}
@@ -183,17 +188,47 @@ export class AppComponent implements OnInit {
 	colorMarkers(){
 		let currMarkers = pano.pano.markers;
 		let currMarker;
+		let polyline = [];
 		currMarkers.forEach(marker => {
 			if (path.indexOf(marker.info.image_id) > -1 && path.length > 0) {
 				if(id != marker.info.image_id) {
 					currMarker  = viewer.getMarker(marker.info.image_id);
-					currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}})
+					currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}});
+					
+					if (path.indexOf(currMarker.id) == path.indexOf(id)+1) {
+						console.log("currMarker");
+						let latlong = [];
+						latlong.push("1.5");
+						latlong.push("-1.5");
+						polyline.push(latlong);
+					}
+
+					//Getting coords of each marker  -1.5 1.5
+					let latlong = [];
+					latlong.push(currMarker.longitude);
+					latlong.push(currMarker.latitude);
+					polyline.push(latlong);
 				}
 			}
 		});
+		console.log(polyline);
+		
+		//Adding Polyline SVG
+		viewer.addMarker({
+			id: "polyline",
+			polyline_rad: polyline,
+			svgStyle: {
+				stroke: 'rgba(140, 190, 10, 0.8)',
+				'stroke-linecap': 'round',
+				'stroke-linejoin': 'round',
+				'stroke-width': '10px'
+			}
+		});
+		
+
 		//rotating camera to path next
 		let index = path.indexOf(id);
-		if (index > 0) viewer.gotoMarker(path[index-1], 0);
+		//if (index > 0) viewer.gotoMarker(path[index-1], 0);
 		for (var i = index; i < path.length; i++) {
 			currMarker = path[i];				
 			if (currMarkers.findIndex(x => x.info.image_id == currMarker) > -1) {

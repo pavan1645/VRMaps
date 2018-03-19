@@ -1,3 +1,15 @@
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define('three.DeviceOrientationControls', ['three'], factory);
+    }
+    else if ('undefined' !== typeof exports && 'undefined' !== typeof module) {
+        module.exports = factory(require('three'));
+    }
+    else {
+        factory(root.THREE);
+    }
+}(this, function(THREE) {
+
 /**
  * @author richt / http://richt.me
  * @author WestLangley / http://github.com/WestLangley
@@ -81,21 +93,32 @@ THREE.DeviceOrientationControls = function( object ) {
 
 		if ( scope.enabled === false ) return;
 
-		var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad( scope.deviceOrientation.alpha ) + this.alphaOffset : 0; // Z
-		var beta = scope.deviceOrientation.beta ? THREE.Math.degToRad( scope.deviceOrientation.beta ) : 0; // X'
-		var gamma = scope.deviceOrientation.gamma ? THREE.Math.degToRad( scope.deviceOrientation.gamma ) : 0; // Y''
-		var orient = scope.screenOrientation ? THREE.Math.degToRad( scope.screenOrientation ) : 0; // O
+		var device = scope.deviceOrientation;
 
-		setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
+		if ( device ) {
+
+			var alpha = device.alpha ? THREE.Math.degToRad( device.alpha ) + scope.alphaOffset : 0; // Z
+
+			var beta = device.beta ? THREE.Math.degToRad( device.beta ) : 0; // X'
+
+			var gamma = device.gamma ? THREE.Math.degToRad( device.gamma ) : 0; // Y''
+
+			var orient = scope.screenOrientation ? THREE.Math.degToRad( scope.screenOrientation ) : 0; // O
+
+			setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
+
+		}
+
 
 	};
 
 	this.dispose = function() {
 
-		this.disconnect();
+		scope.disconnect();
 
 	};
 
 	this.connect();
 
 };
+}));
