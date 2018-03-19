@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
 		});
 		
 		viewer.on('dblclick', (e) => {
-			//console.log("Latitude: "+e.latitude +" Longitude: "+ e.longitude);
+			console.log("Latitude: "+e.latitude +" Longitude: "+ e.longitude);
 			$("#m2p #lat").val(e.latitude);
 			$("#m2p #long").val(e.longitude);
 		});
@@ -189,42 +189,52 @@ export class AppComponent implements OnInit {
 		let currMarkers = pano.pano.markers;
 		let currMarker;
 		let polyline = [];
-		currMarkers.forEach(marker => {
-			if (path.indexOf(marker.info.image_id) > -1 && path.length > 0) {
-				if(id != marker.info.image_id) {
-					currMarker  = viewer.getMarker(marker.info.image_id);
-					currMarker.update({"svgStyle":{"fill":"rgba(0,250,0,0.3)"}});
-					
-					if (path.indexOf(currMarker.id) == path.indexOf(id)+1) {
-						console.log("currMarker");
-						let latlong = [];
-						latlong.push("1.5");
-						latlong.push("-1.5");
-						polyline.push(latlong);
-					}
 
-					//Getting coords of each marker  -1.5 1.5
+		let currPathIndex=path.indexOf(id);
+		
+		let startIndex, endIndex;
+
+		startIndex=(currPathIndex-5 < 0) ? 0 : currPathIndex - 5;
+		endIndex=(currPathIndex+5 >= path.length) ? path.length - 1  : currPathIndex + 5;
+
+		for(let i = startIndex; i <= endIndex ; i++){
+			let currMarker = currMarkers.find(o => o.info.image_id === path[i]);
+			if (currMarker) {
+				currMarker = viewer.getMarker(currMarker.info.image_id);
+				currMarker.update({ "svgStyle": { "fill": "rgba(0,250,0,0.3)" } });
+
+				if(path.indexOf(currMarker.id )==currPathIndex+1){
 					let latlong = [];
-					latlong.push(currMarker.longitude);
-					latlong.push(currMarker.latitude);
+					latlong.push("1.5");
+					latlong.push("-1.5");
 					polyline.push(latlong);
+					latlong = [];
+					latlong.push(Number(currMarker.longitude));
+					latlong.push(Number(currMarker.latitude));
+					polyline.push(latlong);
+					continue;
 				}
+
+				let latlong = [];
+				latlong.push(Number(currMarker.longitude) + 0.05);
+				latlong.push(Number(currMarker.latitude) - 0.05);
+				polyline.push(latlong);
 			}
-		});
-		console.log(polyline);
+		}
 		
 		//Adding Polyline SVG
-		viewer.addMarker({
-			id: "polyline",
-			polyline_rad: polyline,
-			svgStyle: {
-				stroke: 'rgba(140, 190, 10, 0.8)',
-				'stroke-linecap': 'round',
-				'stroke-linejoin': 'round',
-				'stroke-width': '10px'
-			}
-		});
-		
+		if (polyline.length > 0) {
+			viewer.addMarker({
+				id: "polyline",
+				polyline_rad: polyline,
+				svgStyle: {
+					stroke: 'rgba(140, 190, 10, 0.8)',
+					'stroke-linecap': 'round',
+					'stroke-linejoin': 'round',
+					'stroke-width': '10px'
+				}
+			});
+		}		
 
 		//rotating camera to path next
 		let index = path.indexOf(id);
@@ -241,7 +251,7 @@ export class AppComponent implements OnInit {
 					width: 40,
 					height: 40,
 					latitude: nextMarker.latitude,
-					longitude: nextMarker.longitude+0.05
+					longitude: nextMarker.longitude
 				});
 				viewer.gotoMarker(nextMarker, 2000);
 				break;

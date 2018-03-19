@@ -28,8 +28,8 @@ export class Pano {
 								id: marker.info.image_id,
 								circle: 20,
 								anchor: "0% 0%",
-								latitude: marker.latitude,
-								longitude: marker.longitude,
+								latitude: Number(marker.latitude),
+								longitude: Number( marker.longitude),
 								svgStyle: {
 									fill: 'rgba(128, 0, 0, 0.3)'
 								},
