@@ -56,7 +56,6 @@ export class AppComponent implements OnInit {
 		
 		viewer.once('panorama-loaded', () => {
 			pano.load(id);
-			
 		});
 		
 		viewer.on('dblclick', (e) => {
@@ -193,7 +192,7 @@ export class AppComponent implements OnInit {
 		let currPathIndex=path.indexOf(id);
 		
 		let startIndex, endIndex;
-
+		/* Read only +-5 markers of current pano */
 		startIndex=(currPathIndex-5 < 0) ? 0 : currPathIndex - 5;
 		endIndex=(currPathIndex+5 >= path.length) ? path.length - 1  : currPathIndex + 5;
 
@@ -202,12 +201,13 @@ export class AppComponent implements OnInit {
 			if (currMarker) {
 				currMarker = viewer.getMarker(currMarker.info.image_id);
 				currMarker.update({ "svgStyle": { "fill": "rgba(0,250,0,0.3)" } });
-
+				// Add line from prev point to bottom of currMarker
 				if(path.indexOf(currMarker.id )==currPathIndex+1){
 					let latlong = [];
 					latlong.push("1.5");
 					latlong.push("-1.5");
 					polyline.push(latlong);
+					//Next pano gif line fix
 					latlong = [];
 					latlong.push(Number(currMarker.longitude));
 					latlong.push(Number(currMarker.latitude));
@@ -228,7 +228,7 @@ export class AppComponent implements OnInit {
 				id: "polyline",
 				polyline_rad: polyline,
 				svgStyle: {
-					stroke: 'rgba(140, 190, 10, 0.8)',
+					stroke: 'rgba(250, 250, 250, 0.7)',
 					'stroke-linecap': 'round',
 					'stroke-linejoin': 'round',
 					'stroke-width': '10px'
@@ -253,7 +253,7 @@ export class AppComponent implements OnInit {
 					latitude: nextMarker.latitude,
 					longitude: nextMarker.longitude
 				});
-				viewer.gotoMarker(nextMarker, 2000);
+				viewer.gotoMarker(nextMarker, 1750);
 				break;
 			}
 		}
