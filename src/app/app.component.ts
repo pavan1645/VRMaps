@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
 			mousewheel: false,
 			transition: {
 				duration: 2000, // duration of transition in milliseconds
-				loader: false // should display the loader ?
+				loader: true // should display the loader ?
 			}
 		});
 		viewer.zoom(15);
