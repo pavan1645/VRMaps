@@ -141,13 +141,13 @@ export class AppComponent implements OnInit {
 		this.mainService.getPath(src, dest)
 		.subscribe(res => {
 			if (res.error) { this.setText("path", res.error, -1); return; }
-			else this.setText("path", res, 1);
+			//else this.setText("path", res, 1);
 			path = res;
 			//reset previous colors and add load again
-			pano.load(id)
-			.then(() => {
+			/* pano.load(id)
+			.then(() => { */
 				this.colorMarkers();
-			});
+			//});
 		})
 	}
 	
