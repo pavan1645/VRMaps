@@ -18,8 +18,8 @@ var seedDB = require("./seeds");
 var app = express();
 
 //Connect MongoDB
-//var mongoURL = "mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps";
-var mongoURL = "mongodb://localhost/vrmaps"
+var mongoURL = "mongodb://admin:1234@ds229458.mlab.com:29458/vrmaps";
+//var mongoURL = "mongodb://localhost/vrmaps"
 mongoose.connect(mongoURL, {
 	useMongoClient: true
 });
@@ -50,6 +50,6 @@ app.use('/api/', pathRoutes);
 
 seedDB();
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function () {
 	console.log("Serving on port 3000");
 });
